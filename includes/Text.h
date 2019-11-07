@@ -19,7 +19,6 @@ struct TObjectTText {
 
 //---------------------------------------------//
 void ClearObjectTText(TObjectTText *objectTText);
-int InputManager(bool value);
 //---------------------------------------------//
 
 void BeginWorkTText(TObjectTText* objectTText);
