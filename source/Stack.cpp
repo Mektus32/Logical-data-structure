@@ -62,6 +62,7 @@ void StackIsEmpty(TObjectTStack& objectTStack) {
         std::cout << "Stack is not empty" << std::endl;
     } else {
         std::cout << "Stack is empty" << std::endl;
+        ClearTStack(objectTStack);
     }
 }
 
