@@ -91,6 +91,7 @@ void TakeTStackElem(TObjectTStack& objectTStack) {
         std::cout << "Element:" << std::endl;
         PrintText(objectTStack.LastElem->objectTText);
         DelTStackElem(objectTStack, false, false);
+
     } else {
         std::cout << "Stack is empty, can`t take element" << std::endl;
         ClearObjectTStack(objectTStack);

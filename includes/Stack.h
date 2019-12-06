@@ -12,7 +12,7 @@ struct TObjectTStack {
     TStack* FirstElem = nullptr;
     TStack* LastElem = nullptr;
     TObjectTText* CurrentElem = nullptr;
-    bool Available;
+    bool Available = false;
 };
 
 //---------------------------------------------//
