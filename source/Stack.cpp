@@ -37,6 +37,7 @@ int InputManager(bool value = false) {
 //---------------------------------------------//
 
 void BeginWorkTStack(TObjectTStack& objectTStack) {
+	objectTStack.Available = true;
     std::cout << "Work with stack is available" << std::endl;
 }
 
@@ -99,6 +100,7 @@ void TakeTStackElem(TObjectTStack& objectTStack) {
     if (objectTStack.FirstElem) {
         delete objectTStack.CurrentElem;
         objectTStack.CurrentElem = objectTStack.LastElem->objectTText;
+		//print nested struct objectTStack.LastElem
         tmp = objectTStack.FirstElem;
         while (tmp->Next != objectTStack.LastElem) {
             tmp = tmp->Next;
@@ -153,12 +155,13 @@ void PrintTStack(TObjectTStack& objectTStack) {
 }
 
 void EndWorkTStack(TObjectTStack& objectTStack) {
+	objectTStack.Available = false;
     std::cout << "Work with list is end" << std::endl;
 }
 
 int ChooseTStackOperation() {
-    system("pause");
-    system("cls");
+    //system("pause");
+    //system("cls");
     std::cout << "Stack menu" << std::endl;
     std::cout << "1.Begin work with stack" << std::endl;
     std::cout << "2.To clear the stack" << std::endl;
@@ -170,6 +173,7 @@ int ChooseTStackOperation() {
     std::cout << "8.Add stack element" << std::endl;
     std::cout << "9.Print stack" << std::endl;
     std::cout << "10.End work with stack" << std::endl;
+    std::cout << "11.End program" << std::endl;
     std::cout << "Input number operation: ";
     return InputManager();
 }
@@ -177,12 +181,11 @@ int ChooseTStackOperation() {
 void MenuStack() {
     TObjectTStack stack;
     bool loop = true;
-    bool available = false;
     int operation;
 
     while (loop) {
         operation = ChooseTStackOperation();
-        if (available) {
+        if (stack.Available) {
             switch (operation) {
                 case 1: BeginWorkTStack(stack); break;
                 case 2: ClearTStack(stack); break;
@@ -193,16 +196,18 @@ void MenuStack() {
                 case 7: ChangeTStackElem(stack); break;
                 case 8: AddTStackElem(stack); break;
                 case 9: PrintTStack(stack); break;
-                case 10: {
-                    EndWorkTStack(stack);
-                    loop = false;
-                } break;
+                case 10: EndWorkTStack(stack); break;
+                case 11: loop = false; break;
                 default: std::cout << "Choose right operation" << std::endl;
             }
+            if (operation != 9 && operation != 11) {
+            	if (stack.FirstElem) {
+            		PrintTStack(stack);
+            	}
+            }
         } else if (operation == 1) {
-            available = true;
             BeginWorkTStack(stack);
-        } else if (operation == 10) {
+        } else if (operation == 11) {
             loop = false;
             ClearTStack(stack, false);
         } else {
