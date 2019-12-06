@@ -456,7 +456,7 @@ bool MenuText(TObjectTText* objectTText) {
 			exit(0);
 		} else if (operation > 1 && operation < 22) {
 			std::cout << "Choose first operation" << std::endl;
-		} else {211
+		} else {
 			std::cout << "Choose right operation" << std::endl;
 		};
 	}
