@@ -17,14 +17,13 @@ struct TObjectTStack {
 
 //---------------------------------------------//
 void ClearObjectTStack(TObjectTStack& objectTStack);
-int InputManager(bool value);
 //---------------------------------------------//
 
 void BeginWorkTStack(TObjectTStack& objectTStack);
 void ClearTStack(TObjectTStack& objectTStack, bool showMsg);
 void StackIsEmpty(TObjectTStack& objectTStack);
 void ShowTStackElem(TObjectTStack& objectTStack);
-void DelTStackElem(TObjectTStack& objectTStack, bool showMsg);
+void DelTStackElem(TObjectTStack& objectTStack, bool showMsg, bool delNested);
 void TakeTStackElem(TObjectTStack& objectTStack);
 void ChangeTStackElem(TObjectTStack& objectTStack);
 void AddTStackElem(TObjectTStack& objectTStack);
