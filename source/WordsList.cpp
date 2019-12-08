@@ -1,5 +1,7 @@
 #include "WordsList.h"
 
+#include <iostream>
+
 //---------------------------------------------//
 void ClearObjectTWordsList(TObjectTWordsList* objectTWordsList) {
 	objectTWordsList->FirstElem = nullptr;
@@ -205,7 +207,6 @@ void PrintTWordsList(TObjectTWordsList* objectTWordsList, bool callNoCurrent = f
 	size_t beginStr = 0;
 	size_t endStr = 0;
 	bool whileNotWork = true;
-	bool plus = true;
 
 	if (objectTWordsList->FirstElem) {
 		for (auto tmp = objectTWordsList->FirstElem; tmp != nullptr; tmp = tmp->Next) {
@@ -241,7 +242,6 @@ void EndWorkTWordsList(TObjectTWordsList* objectTWordsList) {
 }
 
 //---------------------------------------------//
-
 int ChooseTWordsListOperation() {
 	//system("pause");
 	//system("cls");
@@ -316,3 +316,4 @@ bool MenuList(TObjectTWordsList* objectTWordsList) {
 	std::cout << "////////////////////////////////////////////////////////////////////////1" << std::endl;
 	return objectTWordsList->FirstElem;
 }
+//---------------------------------------------//

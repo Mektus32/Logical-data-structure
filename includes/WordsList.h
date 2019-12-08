@@ -2,7 +2,6 @@
 #define WORDSLIST_H
 
 #include <string>
-#include <iostream>
 
 struct TWordsList {
 	std::string Word;

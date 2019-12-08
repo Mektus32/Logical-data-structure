@@ -7,7 +7,6 @@ void ClearObjectTStack(TObjectTStack& objectTStack) {
     objectTStack.FirstElem = nullptr;
     objectTStack.LastElem = nullptr;
 }
-
 //---------------------------------------------//
 
 void BeginWorkTStack(TObjectTStack& objectTStack) {
@@ -80,15 +79,13 @@ void DelTStackElem(TObjectTStack& objectTStack, bool showMsg = true, bool delNes
 }
 
 void TakeTStackElem(TObjectTStack& objectTStack) {
-    TStack *tmp = nullptr;
-
     if (objectTStack.FirstElem) {
 		if (objectTStack.CurrentElem) {
 			ClearTText(objectTStack.CurrentElem, false, true, true);
 			delete objectTStack.CurrentElem;
 		}
 		objectTStack.CurrentElem = objectTStack.LastElem->objectTText;
-        std::cout << "Taken e       lement:" << std::endl;
+        std::cout << "Taken element:" << std::endl;
         PrintText(objectTStack.LastElem->objectTText);
         DelTStackElem(objectTStack, false, false);
 
@@ -151,6 +148,7 @@ void EndWorkTStack(TObjectTStack& objectTStack) {
     std::cout << "Work with stack is end" << std::endl;
 }
 
+//---------------------------------------------//
 int ChooseTStackOperation() {
     //system("pause");
     //system("cls");
@@ -215,3 +213,4 @@ void MenuStack() {
         }
     }
 }
+//---------------------------------------------//

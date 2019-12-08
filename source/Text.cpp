@@ -2,7 +2,6 @@
 
 #include <iostream>
 
-
 //---------------------------------------------//
 void ClearObjectTText(TObjectTText *objectTText) {
     objectTText->FirstElem = nullptr;
@@ -10,6 +9,7 @@ void ClearObjectTText(TObjectTText *objectTText) {
     objectTText->Worked = nullptr;
 }
 //---------------------------------------------//
+
 void BeginWorkTText(TObjectTText *objectTText) {
 	objectTText->Available = true;
     std::cout << "Work with text is available" << std::endl;
@@ -368,7 +368,6 @@ void AddElemAfterTText(TObjectTText* objectTText) {
 
 void PrintText(TObjectTText* objectTText) {
 	if (objectTText->FirstElem) {
-		int i = 0;
 		for (auto tmp = objectTText->FirstElem; tmp != nullptr; tmp = tmp->Next) {
 			std::cout << (tmp == objectTText->Worked ? "-->" : "   ");
 			PrintTWordsList(tmp->objectTWordsList, true);
@@ -386,7 +385,6 @@ void EndWorkTText(TObjectTText* objectTText) {
 }
 
 //---------------------------------------------//
-
 int ChooseTTextOperation() {
 	//system("pause");
 	//system("cls");
@@ -474,3 +472,4 @@ bool MenuText(TObjectTText* objectTText) {
     std::cout << "////////////////////////////////////////////////////////////////////////1" << std::endl;
 	return objectTText->FirstElem;
 }
+//---------------------------------------------//
