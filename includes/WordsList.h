@@ -33,7 +33,7 @@ void DelElemAfterTWordsList(TObjectTWordsList* objectTWordsList, bool showMsg);
 void TakeElemAfterTWordsList(TObjectTWordsList* objectTWordsList);
 void ChangeElemAfterTWordsList(TObjectTWordsList* objectTWordsList);
 void AddElemAfterTWordsList(TObjectTWordsList* objectTWordsList);
-void PrintTWordsList(TObjectTWordsList* objectTWordsList);
+void PrintTWordsList(TObjectTWordsList* objectTWordsList, bool callNotCurrent);
 void EndWorkTWordsList(TObjectTWordsList* objectTWordsList);
 
 //---------------------------------------------//

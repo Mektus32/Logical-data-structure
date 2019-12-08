@@ -57,7 +57,7 @@ void ClearTWordsList(TObjectTWordsList* objectTWordsList, bool showMsg = true, b
 }
 
 void ListIsEmpty(TObjectTWordsList* objectTWordsList) {
-	if (objectTWordsList->FirstElem) {
+	if (!objectTWordsList->FirstElem) {
 		std::cout << "Words list is empty" << std::endl;
 		ClearObjectTWordsList(objectTWordsList);
 	} else {
@@ -134,7 +134,7 @@ void DelElemAfterTWordsList(TObjectTWordsList* objectTWordsList, bool showMsg = 
 			std::cout << (showMsg ? "Element has been deleted\n" : "");
 		}
 	} else {
-		std::cout << (showMsg ? "Words list is empty, can`t delete next element" : "");
+		std::cout << (showMsg ? "Words list is empty, can`t delete next element\n" : "");
 		ClearObjectTWordsList(objectTWordsList);
 	}
 }
@@ -146,7 +146,7 @@ void TakeElemAfterTWordsList(TObjectTWordsList* objectTWordsList) {
 		} else if (!objectTWordsList->Worked->Next) {
 			std::cout << "Work pointer on last element, can`t take next element" << std::endl;
 		} else {
-			std::cout << "Element: " << objectTWordsList->Worked->Next->Word << std::endl;
+			std::cout << "Taken element: " << objectTWordsList->Worked->Next->Word << std::endl;
 			objectTWordsList->CurrentElem = objectTWordsList->Worked->Next->Word;
 			DelElemAfterTWordsList(objectTWordsList, false);
 		}
@@ -157,6 +157,8 @@ void TakeElemAfterTWordsList(TObjectTWordsList* objectTWordsList) {
 }
 
 void ChangeElemAfterTWordsList(TObjectTWordsList* objectTWordsList) {
+	char clear = '\0';
+
 	if (objectTWordsList->FirstElem) {
 		if (!objectTWordsList->Worked) {
 			std::cout << "Work pointer is nullptr.., can`t change next element" << std::endl;
@@ -165,6 +167,8 @@ void ChangeElemAfterTWordsList(TObjectTWordsList* objectTWordsList) {
 		} else {
 			std::cout << "Input new word: ";
 			std::cin >> objectTWordsList->Worked->Next->Word;
+			while ((clear = (char)getchar()) != '\n') {
+			}
 		}
 	} else {
 		std::cout << "Words list is empty, can`t change next element" << std::endl;
@@ -174,9 +178,12 @@ void ChangeElemAfterTWordsList(TObjectTWordsList* objectTWordsList) {
 
 void AddElemAfterTWordsList(TObjectTWordsList* objectTWordsList) {
 	auto newElem = new TWordsList;
+	char clear = '\0';
 
 	std::cout << "Input new word: ";
 	std::cin >> newElem->Word;
+	while ((clear = (char)getchar()) != '\n') {
+	}
 	if (!objectTWordsList->FirstElem) {
 		objectTWordsList->FirstElem = newElem;
 		objectTWordsList->LastElem = newElem;
@@ -194,25 +201,29 @@ void AddElemAfterTWordsList(TObjectTWordsList* objectTWordsList) {
 	std::cout << "New element has been added" << std::endl;
 }
 
-void PrintTWordsList(TObjectTWordsList* objectTWordsList) {
+void PrintTWordsList(TObjectTWordsList* objectTWordsList, bool callNoCurrent = false) {
 	size_t beginStr = 0;
 	size_t endStr = 0;
 	bool whileNotWork = true;
+	bool plus = true;
 
 	if (objectTWordsList->FirstElem) {
 		for (auto tmp = objectTWordsList->FirstElem; tmp != nullptr; tmp = tmp->Next) {
 			if (tmp == objectTWordsList->Worked) {
 				whileNotWork = false;
+				endStr = beginStr + tmp->Word.size();
 			}
 			if (whileNotWork) {
-				beginStr = tmp->Word.size() + 1;
-			} else {
-				endStr = beginStr + tmp->Word.size();
+				beginStr += tmp->Word.size() + 1;
 			}
 			std::cout << tmp->Word << " ";
 		}
+		std::cout << std::endl;
+		if (callNoCurrent) {
+			std::cout << "   ";
+		}
 		for (size_t i = 0; i < endStr; ++i) {
-			if (i == beginStr || i == endStr) {
+			if (i == beginStr || i == endStr - 1) {
 				std::cout << '|';
 			} else {
 				std::cout << ' ';
@@ -234,6 +245,7 @@ void EndWorkTWordsList(TObjectTWordsList* objectTWordsList) {
 int ChooseTWordsListOperation() {
 	//system("pause");
 	//system("cls");
+	std::cout << "////////////////////////////////////////////////////////////////////////" << std::endl;
 	std::cout << "Words list menu" << std::endl;
 	std::cout << "1.Begin work with words list" << std::endl;
 	std::cout << "2.To clear the words list" << std::endl;
@@ -255,12 +267,13 @@ int ChooseTWordsListOperation() {
 }
 
 bool MenuList(TObjectTWordsList* objectTWordsList) {
-	//objectTWordsList->Available = false;
+	objectTWordsList->Available = false;
 	bool loop = true;
 	int operation;
 
 	while (loop) {
 		operation = ChooseTWordsListOperation();
+		std::cout << "////////////////////////////////////////////////////////////////////////" << std::endl;
 		if (objectTWordsList->Available) {
 			switch (operation) {
 				case 1: BeginWorkTWordsList(objectTWordsList); break;
@@ -274,15 +287,16 @@ bool MenuList(TObjectTWordsList* objectTWordsList) {
 				case 9: TakeElemAfterTWordsList(objectTWordsList); break;
 				case 10: ChangeElemAfterTWordsList(objectTWordsList); break;
 				case 11: AddElemAfterTWordsList(objectTWordsList); break;
-				case 12: PrintTWordsList(objectTWordsList); break;
+				case 12: PrintTWordsList(objectTWordsList); std::cout << std::endl; break;
 				case 13: EndWorkTWordsList(objectTWordsList); break;
 				case 14: loop = false; break;
 				case 15: exit(0);
 				default: std::cout << "Choose right operation" << std::endl;
-				if (operation != 12 && operation != 14) {
-					if (objectTWordsList->FirstElem) {
-						PrintTWordsList(objectTWordsList);
-					}
+			}
+			if (operation != 12 && operation != 14) {
+				if (objectTWordsList->FirstElem) {
+					PrintTWordsList(objectTWordsList);
+					std::cout << std::endl;
 				}
 			}
 		} else if (operation == 1) {
@@ -294,10 +308,11 @@ bool MenuList(TObjectTWordsList* objectTWordsList) {
 				exit(0);
 			}
 		} else if (operation > 1 && operation < 14) {
-			std::cout << "Use begin work" << std::endl;
+			std::cout << "Use operation begin work" << std::endl;
 		} else {
 			std::cout << "Choose right operation" << std::endl;
 		}
 	}
+	std::cout << "////////////////////////////////////////////////////////////////////////1" << std::endl;
 	return objectTWordsList->FirstElem;
 }

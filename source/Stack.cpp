@@ -38,7 +38,7 @@ void StackIsEmpty(TObjectTStack& objectTStack) {
         std::cout << "Stack is not empty" << std::endl;
     } else {
         std::cout << "Stack is empty" << std::endl;
-        ClearTStack(objectTStack);
+        ClearObjectTStack(objectTStack);
     }
 }
 
@@ -57,7 +57,7 @@ void DelTStackElem(TObjectTStack& objectTStack, bool showMsg = true, bool delNes
 
     if (objectTStack.FirstElem) {
         tmp = objectTStack.FirstElem;
-        while (tmp->Next != objectTStack.LastElem) {
+        while (tmp != objectTStack.LastElem && tmp->Next != objectTStack.LastElem) {
             tmp = tmp->Next;
         }
         ClearTText(objectTStack.LastElem->objectTText, false, delNested, true);
@@ -88,7 +88,7 @@ void TakeTStackElem(TObjectTStack& objectTStack) {
 			delete objectTStack.CurrentElem;
 		}
 		objectTStack.CurrentElem = objectTStack.LastElem->objectTText;
-        std::cout << "Element:" << std::endl;
+        std::cout << "Taken e       lement:" << std::endl;
         PrintText(objectTStack.LastElem->objectTText);
         DelTStackElem(objectTStack, false, false);
 
@@ -116,7 +116,7 @@ void AddTStackElem(TObjectTStack& objectTStack) {
     auto* newElem = new TObjectTText;
     if (!MenuText(newElem)) {
 		delete newElem;
-		std::cout << "Nested structure is empty, does not add" << std::endl;
+		std::cout << "Nested structure is empty, element does not add" << std::endl;
 		return;
     }
     if (objectTStack.FirstElem) {
@@ -136,7 +136,7 @@ void PrintTStack(TObjectTStack& objectTStack) {
 
     if (objectTStack.FirstElem) {
         tmp = objectTStack.FirstElem;
-        for (int i = 0; tmp != nullptr; ++i, tmp = tmp->Next) {
+        for (int i = 1; tmp != nullptr; ++i, tmp = tmp->Next) {
             std::cout << i << ".Elem." << std::endl;
             PrintText(tmp->objectTText);
         }
@@ -148,12 +148,13 @@ void PrintTStack(TObjectTStack& objectTStack) {
 
 void EndWorkTStack(TObjectTStack& objectTStack) {
 	objectTStack.Available = false;
-    std::cout << "Work with list is end" << std::endl;
+    std::cout << "Work with stack is end" << std::endl;
 }
 
 int ChooseTStackOperation() {
     //system("pause");
     //system("cls");
+    std::cout << "////////////////////////////////////////////////////////////////////////" << std::endl;
     std::cout << "Stack menu" << std::endl;
     std::cout << "1.Begin work with stack" << std::endl;
     std::cout << "2.To clear the stack" << std::endl;
@@ -177,6 +178,7 @@ void MenuStack() {
 
     while (loop) {
         operation = ChooseTStackOperation();
+        std::cout << "////////////////////////////////////////////////////////////////////////" << std::endl;
         if (stack.Available) {
             switch (operation) {
                 case 1: BeginWorkTStack(stack); break;
@@ -207,7 +209,7 @@ void MenuStack() {
             	delete stack.CurrentElem;
             }
         } else if (operation > 1 && operation < 11) {
-            std::cout << "Choose first operation" << std::endl;
+            std::cout << "Use operation begin work" << std::endl;
         } else {
         	std::cout << "Choose right operation" << std::endl;
         }
