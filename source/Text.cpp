@@ -25,7 +25,7 @@ void ClearTText(TObjectTText* objectTText, bool showMsg = true, bool delNested =
         while (objectTText->FirstElem) {
             del = objectTText->FirstElem;
             objectTText->FirstElem = objectTText->FirstElem->Next;
-            //Clear nested struct
+            ClearTWordsList(del->objectTWordsList, false, true);
             if (delNested) {
             	delete del->objectTWordsList;
             }
@@ -133,7 +133,7 @@ void ShowElemBeforeTText(TObjectTText* objectTText) {
 			std::cout << "Work pointer on last element, can`t show before" << std::endl;
 		} else {
 			std::cout << "Element:" << std::endl;
-			//Print nested struct
+			PrintTWordsList(objectTText->Worked->Prev->objectTWordsList);
 		}
     } else {
         std::cout << "Text is empty, can`t show element" << std::endl;
@@ -149,7 +149,7 @@ void ShowElemAfterTText(TObjectTText* objectTText) {
 			std::cout << "Work pointer on last element, can`t show after" << std::endl;
 		} else {
 			std::cout << "Element:" << std::endl;
-			//Print nested struct
+            PrintTWordsList(objectTText->Worked->Next->objectTWordsList);
 		}
 	} else {
 		std::cout << "Text is empty, can`t show element" << std::endl;
@@ -169,7 +169,7 @@ void DelElemBeforeTText(TObjectTText *objectTText, bool showMsg = true, bool del
 			del = objectTText->Worked->Prev;
 			objectTText->Worked->Prev = objectTText->Worked->Prev->Prev;
 			objectTText->Worked->Prev->Next = objectTText->Worked;
-			//delete nested struct
+			ClearTWordsList(objectTText->Worked->Prev->objectTWordsList, false, true);
 			if (delNested) {
 				delete del->objectTWordsList;
 			}
@@ -194,8 +194,8 @@ void DelElemAfterTText(TObjectTText *objectTText, bool showMsg = true, bool delN
 			del = objectTText->Worked->Next;
 			objectTText->Worked->Next = objectTText->Worked->Next->Next;
 			objectTText->Worked->Next->Prev = objectTText->Worked;
-			//delete nested struct
-			if (delNested) {
+            ClearTWordsList(objectTText->Worked->Next->objectTWordsList, false, true);
+            if (delNested) {
 				delete del->objectTWordsList;
 			}
 			delete del;
@@ -215,12 +215,12 @@ void TakeElemBeforeTText(TObjectTText* objectTText) {
 			std::cout << "Work pointer on last element, can`t take before" << std::endl;
 		} else {
 			if (objectTText->CurrentElem) {
-				//Clear nested struct
+				ClearTWordsList(objectTText->CurrentElem, false, true);
 				delete objectTText->CurrentElem;
 			}
 			objectTText->CurrentElem = objectTText->Worked->Prev->objectTWordsList;
 			std::cout << "Element:" << std::endl;
-			//Print nested struct
+			PrintTWordsList(objectTText->CurrentElem);
 			DelElemBeforeTText(objectTText, false, false);
 		}
 	} else {
@@ -237,12 +237,12 @@ void TakeElemAfterTText(TObjectTText* objectTText) {
 			std::cout << "Work pointer on last element, can`t take after" << std::endl;
 		} else {
 			if (objectTText->CurrentElem) {
-				//Clear nested struct
+                ClearTWordsList(objectTText->CurrentElem, false, true);
 				delete objectTText->CurrentElem;
 			}
 			objectTText->CurrentElem = objectTText->Worked->Prev->objectTWordsList;
 			std::cout << "Element:" << std::endl;
-			//Print nested struct
+            PrintTWordsList(objectTText->CurrentElem);
 			DelElemAfterTText(objectTText, false, false);
 		}
 	} else {
@@ -258,7 +258,10 @@ void ChangeElemBeforeTText(TObjectTText* objectTText) {
 		} else if (!objectTText->Worked->Prev) {
 			std::cout << "Work pointer on last element, can`t change before" << std::endl;
 		} else {
-			//Menu nested struct
+		    if (!MenuList(objectTText->Worked->Prev->objectTWordsList)) {
+		        DelElemBeforeTText(objectTText, false);
+		        std::cout << "Nested struct is empty, element has been removed" << std::endl;
+		    }
 		}
 	} else {
 		std::cout << "Text is empty, can`t change before" << std::endl;
@@ -273,7 +276,10 @@ void ChangeElemAfterTText(TObjectTText* objectTText) {
 		} else if (!objectTText->Worked->Next) {
 			std::cout << "Work pointer on last element, can`t change after" << std::endl;
 		} else {
-			//Menu nested struct
+            if (!MenuList(objectTText->Worked->Next->objectTWordsList)) {
+                DelElemAfterTText(objectTText, false);
+                std::cout << "Nested struct is empty, element has been removed" << std::endl;
+            }
 		}
 	} else {
 		std::cout << "Text is empty, can`t change after" << std::endl;
@@ -283,7 +289,12 @@ void ChangeElemAfterTText(TObjectTText* objectTText) {
 
 void AddElemBeforeTText(TObjectTText* objectTText) {
 	auto newElem = new TObjectTWordsList;
-	//Menu nested struct
+	if (!MenuList(newElem)) {
+	    ClearTWordsList(newElem, false, true);
+	    delete newElem;
+	    std::cout << "Nested struct is empty, can`t add new element" << std::endl;
+	    return;
+	}
 	if (!objectTText->FirstElem) {
 		objectTText->FirstElem = new TText;
 		objectTText->FirstElem->objectTWordsList = newElem;
@@ -291,11 +302,11 @@ void AddElemBeforeTText(TObjectTText* objectTText) {
 		objectTText->Worked = objectTText->FirstElem;
 	} else if (!objectTText->Worked) {
 		std::cout << "Work pointer invalid, can`t add before" << std::endl;
-		//Clear nested struct
+		ClearTWordsList(newElem, false, true);
 		delete newElem;
 	} else if (!objectTText->Worked->Prev) {
 		std::cout << "Work pointer om first element, can`t add before" << std::endl;
-		//Clear nested struct
+		ClearTWordsList(newElem, false, true);
 		delete newElem;
 	} else {
 		auto* tmp = new TText;
@@ -309,7 +320,12 @@ void AddElemBeforeTText(TObjectTText* objectTText) {
 
 void AddElemAfterTText(TObjectTText* objectTText) {
 	auto newElem = new TObjectTWordsList;
-	//Menu nested struct
+    if (!MenuList(newElem)) {
+        ClearTWordsList(newElem, false, true);
+        delete newElem;
+        std::cout << "Nested struct is empty, can`t add new element" << std::endl;
+        return;
+    }
 	if (!objectTText->FirstElem) {
 		objectTText->FirstElem = new TText;
 		objectTText->FirstElem->objectTWordsList = newElem;
@@ -317,11 +333,11 @@ void AddElemAfterTText(TObjectTText* objectTText) {
 		objectTText->Worked = objectTText->FirstElem;
 	} else if (!objectTText->Worked) {
 		std::cout << "Work pointer invalid, can`t add after" << std::endl;
-		//Clear nested struct
+		ClearTWordsList(newElem, false, true);
 		delete newElem;
 	} else if (!objectTText->Worked->Next) {
 		std::cout << "Work pointer om first element, can`t add after" << std::endl;
-		//Clear nested struct
+		ClearTWordsList(newElem, false, true);
 		delete newElem;
 	} else {
 		auto tmp = new TText;
@@ -338,7 +354,7 @@ void PrintText(TObjectTText* objectTText) {
 		int i = 0;
 		for (auto tmp = objectTText->FirstElem; tmp != nullptr; tmp = tmp->Next) {
 			std::cout << (tmp == objectTText->Worked ? "-->" : "   ");
-			//Print nested struct
+			PrintTWordsList(tmp->objectTWordsList);
 			std::cout << std::endl;
 		}
 	} else {
