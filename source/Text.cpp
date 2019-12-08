@@ -9,30 +9,6 @@ void ClearObjectTText(TObjectTText *objectTText) {
     objectTText->LastElem = nullptr;
     objectTText->Worked = nullptr;
 }
-
-int InputManager(bool value = false) {
-	char c = '\0';
-	char clear = '\0';
-	int count = 0;
-	std::string buffer;
-
-	if (value) {
-		while (c <= ' ' || c > '~') {
-			count ? (std::cout << "Input right character: ") : std::cout << "";
-			c = (char)getchar();
-			while ((clear = (char)getchar()) != '\n') {
-			}
-			++count;
-		}
-		return c;
-	}
-	else {
-		while ((c = (char)getchar()) != '\n') {
-			buffer += c;
-		}
-		return atoi(buffer.c_str());
-	}
-}
 //---------------------------------------------//
 void BeginWorkTText(TObjectTText *objectTText) {
 	objectTText->Available = true;
@@ -406,7 +382,7 @@ int ChooseTTextOperation() {
 	std::cout << "22.Return to up struct" << std::endl;
 	std::cout << "23.End program" << std::endl;
 	std::cout << "Input number operation: ";
-	return InputManager();
+	return InputManager(false);
 }
 
 bool MenuText(TObjectTText* objectTText) {
@@ -419,7 +395,7 @@ bool MenuText(TObjectTText* objectTText) {
 		if (objectTText->Available) {
 			switch (operation) {
 				case 1: BeginWorkTText(objectTText); break;
-				case 2: ClearTText(objectTText); break;
+				case 2: ClearTText(objectTText, true, true, false); break;
 				case 3: TextIsEmpty(objectTText); break;
 				case 4: SetOnFirstElemTText(objectTText); break;
 				case 5: SetOnLastElemTText(objectTText); break;
