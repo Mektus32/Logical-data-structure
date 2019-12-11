@@ -19,17 +19,17 @@ void ClearTText(TObjectTText* objectTText, bool showMsg = true, bool delNested =
     TText* del = nullptr;
 
     if (objectTText->FirstElem) {
-		if (callNotCurrent) {
-			delete objectTText->CurrentElem;
+		if (callNotCurrent && objectTText->CurrentElem) {
+			free(objectTText->CurrentElem);
 		}
         while (objectTText->FirstElem) {
             del = objectTText->FirstElem;
             objectTText->FirstElem = objectTText->FirstElem->Next;
-            ClearTWordsList(del->objectTWordsList, false, true);
             if (delNested) {
-            	delete del->objectTWordsList;
+                ClearTWordsList(del->objectTWordsList, false, true);
+            	free(del->objectTWordsList);
             }
-            delete del;
+            free(del);
         }
         showMsg ? std::cout << "Text has been cleared\n" << std::endl : std::cout << "";
     } else {
@@ -175,11 +175,11 @@ void DelElemBeforeTText(TObjectTText *objectTText, bool showMsg = true, bool del
             } else {
 			    objectTText->FirstElem = objectTText->Worked;
 			}
-			ClearTWordsList(del->objectTWordsList, false, true);
 			if (delNested) {
-				delete del->objectTWordsList;
+                ClearTWordsList(del->objectTWordsList, false, true);
+				free(del->objectTWordsList);
 			}
-			delete del;
+			free(del);
 			std::cout << (showMsg ? "Element has been deleted\n" : "");
 		}
 	} else {
@@ -204,11 +204,11 @@ void DelElemAfterTText(TObjectTText *objectTText, bool showMsg = true, bool delN
             } else {
 			    objectTText->LastElem = objectTText->Worked;
 			}
-            ClearTWordsList(del->objectTWordsList, false, true);
             if (delNested) {
-				delete del->objectTWordsList;
+                ClearTWordsList(del->objectTWordsList, false, true);
+				free(del->objectTWordsList);
 			}
-			delete del;
+			free(del);
 			std::cout << (showMsg ? "Element has been deleted\n" : "");
 		}
 	} else {
@@ -226,7 +226,7 @@ void TakeElemBeforeTText(TObjectTText* objectTText) {
 		} else {
 			if (objectTText->CurrentElem) {
 				ClearTWordsList(objectTText->CurrentElem, false, true);
-				delete objectTText->CurrentElem;
+				free(objectTText->CurrentElem);
 			}
 			objectTText->CurrentElem = objectTText->Worked->Prev->objectTWordsList;
 			std::cout << "Taken element:" << std::endl;
@@ -249,7 +249,7 @@ void TakeElemAfterTText(TObjectTText* objectTText) {
 		} else {
 			if (objectTText->CurrentElem) {
                 ClearTWordsList(objectTText->CurrentElem, false, true);
-				delete objectTText->CurrentElem;
+				free(objectTText->CurrentElem);
 			}
 			objectTText->CurrentElem = objectTText->Worked->Next->objectTWordsList;
 			std::cout << "Taken element:" << std::endl;
@@ -300,70 +300,97 @@ void ChangeElemAfterTText(TObjectTText* objectTText) {
 }
 
 void AddElemBeforeTText(TObjectTText* objectTText) {
-	auto newElem = new TObjectTWordsList;
+	auto newElem = (TObjectTWordsList*)malloc(sizeof(TObjectTWordsList));
+	auto tmpText = (TText*)malloc(sizeof(TText));
+
+	if (!newElem || !tmpText) {
+	    std::cout << "Error allocate memory, element does not add" << std::endl;
+	    if (newElem) {
+	        free(newElem);
+	    }
+	    if (tmpText) {
+	        free(tmpText);
+	    }
+	    return;
+	}
 	if (!MenuList(newElem)) {
 	    ClearTWordsList(newElem, false, true);
-	    delete newElem;
+	    free(newElem);
+	    free(tmpText);
 	    std::cout << "Nested struct is empty, can`t add new element" << std::endl;
 	    return;
 	}
 	if (!objectTText->FirstElem) {
-		objectTText->FirstElem = new TText;
+		objectTText->FirstElem = tmpText;
 		objectTText->FirstElem->objectTWordsList = newElem;
 		objectTText->LastElem = objectTText->FirstElem;
 		objectTText->Worked = objectTText->FirstElem;
 	} else if (!objectTText->Worked) {
 		std::cout << "Work pointer invalid, can`t add before" << std::endl;
 		ClearTWordsList(newElem, false, true);
-		delete newElem;
+		free(newElem);
+		free(tmpText);
 		return;
 	} else if (!objectTText->Worked->Prev) {
-		objectTText->Worked->Prev = new TText;
+		objectTText->Worked->Prev = tmpText;
 		objectTText->FirstElem = objectTText->Worked->Prev;
 		objectTText->FirstElem->Next = objectTText->Worked;
 		objectTText->FirstElem->objectTWordsList = newElem;
 	} else {
-		auto* tmp = new TText;
-		tmp->objectTWordsList = newElem;
-		tmp->Next = objectTText->Worked;
-		tmp->Prev = objectTText->Worked->Prev;
-		tmp->Next->Prev = tmp;
-		tmp->Prev->Next = tmp;
+		tmpText->objectTWordsList = newElem;
+		tmpText->Next = objectTText->Worked;
+		tmpText->Prev = objectTText->Worked->Prev;
+		tmpText->Next->Prev = tmpText;
+		tmpText->Prev->Next = tmpText;
 	}
     std::cout << "Element has been added" << std::endl;
 }
 
 void AddElemAfterTText(TObjectTText* objectTText) {
-	auto newElem = new TObjectTWordsList;
+	auto newElem = (TObjectTWordsList*)malloc(sizeof(TObjectTWordsList));
+	auto tmpText = (TText*)malloc(sizeof(TText));
+
+    if (!newElem || !tmpText) {
+        std::cout << "Error allocate memory, element does not add" << std::endl;
+        if (newElem) {
+            free(newElem);
+        }
+        if (tmpText) {
+            free(tmpText);
+        }
+        return;
+    }
     if (!MenuList(newElem)) {
         ClearTWordsList(newElem, false, true);
-        delete newElem;
+        free(newElem);
+        free(tmpText);
         std::cout << "Nested struct is empty, can`t add new element" << std::endl;
         return;
     }
 	if (!objectTText->FirstElem) {
-		objectTText->FirstElem = new TText;
+		objectTText->FirstElem = tmpText;
 		objectTText->FirstElem->objectTWordsList = newElem;
 		objectTText->LastElem = objectTText->FirstElem;
 		objectTText->Worked = objectTText->FirstElem;
 	} else if (!objectTText->Worked) {
 		std::cout << "Work pointer invalid, can`t add after" << std::endl;
 		ClearTWordsList(newElem, false, true);
-		delete newElem;
+		free(newElem);
+		free(tmpText);
+		return;
 	} else if (!objectTText->Worked->Next) {
-	    objectTText->Worked->Next = new TText;
+	    objectTText->Worked->Next = tmpText;
 	    objectTText->LastElem = objectTText->Worked->Next;
 	    objectTText->LastElem->Prev = objectTText->Worked;
 	    objectTText->LastElem->objectTWordsList = newElem;
 	} else {
-		auto tmp = new TText;
-		tmp->objectTWordsList = newElem;
-		tmp->Next = objectTText->Worked->Next;
-		tmp->Prev = objectTText->Worked;
-		tmp->Next->Prev = tmp;
-		tmp->Prev->Next = tmp;
-		std::cout << "Element has been added" << std::endl;
+		tmpText->objectTWordsList = newElem;
+		tmpText->Next = objectTText->Worked->Next;
+		tmpText->Prev = objectTText->Worked;
+		tmpText->Next->Prev = tmpText;
+		tmpText->Prev->Next = tmpText;
 	}
+    std::cout << "Element has been added" << std::endl;
 }
 
 void PrintText(TObjectTText* objectTText) {
@@ -373,6 +400,12 @@ void PrintText(TObjectTText* objectTText) {
 			PrintTWordsList(tmp->objectTWordsList, true);
 			std::cout << std::endl;
 		}
+		std::cout << "revers print:" << std::endl;
+        for (auto tmp = objectTText->LastElem; tmp != nullptr; tmp = tmp->Prev) {
+            std::cout << (tmp == objectTText->Worked ? "-->" : "   ");
+            PrintTWordsList(tmp->objectTWordsList, true);
+            std::cout << std::endl;
+        }
 	} else {
 		std::cout << "Text is empty, can`t print" << std::endl;
 		ClearObjectTText(objectTText);
@@ -464,12 +497,12 @@ bool MenuText(TObjectTText* objectTText) {
 		} else if (operation == 23) {
 			exit(0);
 		} else if (operation > 1 && operation < 22) {
-			std::cout << "Use operation begin work" << std::endl;
+			std::cout << "Work is prohibited" << std::endl;
 		} else {
 			std::cout << "Choose right operation" << std::endl;
 		};
 	}
-    std::cout << "////////////////////////////////////////////////////////////////////////1" << std::endl;
+    std::cout << "////////////////////////////////////////////////////////////////////////" << std::endl;
 	return objectTText->FirstElem;
 }
 //---------------------------------------------//

@@ -1,17 +1,17 @@
 #ifndef WORDSLIST_H
 #define WORDSLIST_H
 
-#include <string>
+#include <cstring>
 
 struct TWordsList {
-	std::string Word;
+	char* Word;
 	TWordsList* Next = nullptr;
 };
 
 struct TObjectTWordsList {
 	TWordsList* FirstElem = nullptr;
 	TWordsList* LastElem = nullptr;
-	std::string CurrentElem;
+	char* CurrentElem;
 	TWordsList* Worked = nullptr;
 	bool Available = false;
 };
@@ -19,6 +19,7 @@ struct TObjectTWordsList {
 //---------------------------------------------//
 void ClearObjectTWordsList(TObjectTWordsList* objectTWordsList);
 int InputManager(bool value);
+char* CreateString();
 //---------------------------------------------//
 
 void BeginWorkTWordsList(TObjectTWordsList* objectTWordsList);

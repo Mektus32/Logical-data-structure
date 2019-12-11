@@ -32,6 +32,37 @@ int InputManager(bool value = false) {
 		return atoi(buffer.c_str());
 	}
 }
+
+char* CreateString() {
+    char* str = nullptr;
+    size_t size = 1;
+    char c = ' ';
+    size_t i;
+
+    if (!(str = (char*)malloc(sizeof(char) * size + 1))) {
+        std::cout << "Error allocate memory, element does not add" << std::endl;
+        return nullptr;
+    }
+    while (c == ' ' || c == '\n') {
+        c = (char)getchar();
+    }
+    for (i = 0; c != ' ' && c != '\n'; ++i) {
+        str[i] = c;
+        if (i == size) {
+            size += 4;
+            if (!(str = (char*)realloc(str, size + 1))) {
+                std::cout << "Error allocate memory, element does not add" << std::endl;
+                return nullptr;
+            }
+        }
+        c = (char)getchar();
+    }
+    str[i] = '\0';
+    while (c != '\n') {
+        c = (char)getchar();
+    }
+    return str;
+}
 //---------------------------------------------//
 
 void BeginWorkTWordsList(TObjectTWordsList* objectTWordsList) {
@@ -43,13 +74,13 @@ void ClearTWordsList(TObjectTWordsList* objectTWordsList, bool showMsg = true, b
 	TWordsList* del = nullptr;
 
 	if (objectTWordsList->FirstElem) {
-		if (callNotCurrent) {
-			objectTWordsList->CurrentElem.clear();
+		if (callNotCurrent && objectTWordsList->CurrentElem) {
+			free(objectTWordsList->CurrentElem);
 		}
 		while (objectTWordsList->FirstElem) {
 			del = objectTWordsList->FirstElem;
 			objectTWordsList->FirstElem = objectTWordsList->FirstElem->Next;
-			delete del;
+			free(del);
 		}
 		std::cout << (showMsg ? "Words list has been cleared\n" : "");
 	} else {
@@ -132,7 +163,8 @@ void DelElemAfterTWordsList(TObjectTWordsList* objectTWordsList, bool showMsg = 
 		} else {
 			del = objectTWordsList->Worked->Next;
 			objectTWordsList->Worked->Next = objectTWordsList->Worked->Next->Next;
-			delete del;
+			free(del->Word);
+			free(del);
 			std::cout << (showMsg ? "Element has been deleted\n" : "");
 		}
 	} else {
@@ -149,7 +181,10 @@ void TakeElemAfterTWordsList(TObjectTWordsList* objectTWordsList) {
 			std::cout << "Work pointer on last element, can`t take next element" << std::endl;
 		} else {
 			std::cout << "Taken element: " << objectTWordsList->Worked->Next->Word << std::endl;
-			objectTWordsList->CurrentElem = objectTWordsList->Worked->Next->Word;
+			if (objectTWordsList->CurrentElem) {
+			    free(objectTWordsList->CurrentElem);
+			}
+			objectTWordsList->CurrentElem = strdup(objectTWordsList->Worked->Next->Word);
 			DelElemAfterTWordsList(objectTWordsList, false);
 		}
 	} else {
@@ -168,8 +203,8 @@ void ChangeElemAfterTWordsList(TObjectTWordsList* objectTWordsList) {
 			std::cout << "Work pointer on last element, can`t change next element" << std::endl;
 		} else {
 			std::cout << "Input new word: ";
-			std::cin >> objectTWordsList->Worked->Next->Word;
-			while ((clear = (char)getchar()) != '\n') {
+			if (!(objectTWordsList->Worked->Next->Word = CreateString())) {
+			    return;
 			}
 		}
 	} else {
@@ -179,12 +214,17 @@ void ChangeElemAfterTWordsList(TObjectTWordsList* objectTWordsList) {
 }
 
 void AddElemAfterTWordsList(TObjectTWordsList* objectTWordsList) {
-	auto newElem = new TWordsList;
+	auto newElem = (TWordsList*)malloc(sizeof(TWordsList));
 	char clear = '\0';
 
+	if (!newElem) {
+	    std::cout << "Error allocate memory, element does not add" << std::endl;
+	    return;
+	}
 	std::cout << "Input new word: ";
-	std::cin >> newElem->Word;
-	while ((clear = (char)getchar()) != '\n') {
+	if (!(newElem->Word = CreateString())) {
+	    free(newElem);
+	    return;
 	}
 	if (!objectTWordsList->FirstElem) {
 		objectTWordsList->FirstElem = newElem;
@@ -192,6 +232,8 @@ void AddElemAfterTWordsList(TObjectTWordsList* objectTWordsList) {
 		objectTWordsList->Worked = newElem;
 	} else if (!objectTWordsList->Worked) {
 		std::cout << "Work pointer is nullptr.., can`t add new element" << std::endl;
+		free(newElem->Word);
+		free(newElem);
 		return;
 	} else if (!objectTWordsList->Worked->Next) {
 		objectTWordsList->Worked->Next = newElem;
@@ -212,10 +254,10 @@ void PrintTWordsList(TObjectTWordsList* objectTWordsList, bool callNoCurrent = f
 		for (auto tmp = objectTWordsList->FirstElem; tmp != nullptr; tmp = tmp->Next) {
 			if (tmp == objectTWordsList->Worked) {
 				whileNotWork = false;
-				endStr = beginStr + tmp->Word.size();
+				endStr = beginStr + strlen(tmp->Word);
 			}
 			if (whileNotWork) {
-				beginStr += tmp->Word.size() + 1;
+				beginStr += strlen(tmp->Word) + 1;
 			}
 			std::cout << tmp->Word << " ";
 		}
@@ -308,7 +350,7 @@ bool MenuList(TObjectTWordsList* objectTWordsList) {
 				exit(0);
 			}
 		} else if (operation > 1 && operation < 14) {
-			std::cout << "Use operation begin work" << std::endl;
+			std::cout << "Work is prohibited" << std::endl;
 		} else {
 			std::cout << "Choose right operation" << std::endl;
 		}

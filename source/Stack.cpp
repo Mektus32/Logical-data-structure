@@ -22,8 +22,8 @@ void ClearTStack(TObjectTStack& objectTStack, bool showMsg = true) {
             del = objectTStack.FirstElem;
             objectTStack.FirstElem = objectTStack.FirstElem->Next;
             ClearTText(del->objectTText, false, true,true);
-            delete del->objectTText;
-            delete del;
+            free(del->objectTText);
+            free(del);
         }
         std::cout << (showMsg ? "Stack has been cleared\n" : "");
     } else {
@@ -59,16 +59,16 @@ void DelTStackElem(TObjectTStack& objectTStack, bool showMsg = true, bool delNes
         while (tmp != objectTStack.LastElem && tmp->Next != objectTStack.LastElem) {
             tmp = tmp->Next;
         }
-        ClearTText(objectTStack.LastElem->objectTText, false, delNested, true);
         if (delNested) {
-        	delete objectTStack.LastElem->objectTText;
+            ClearTText(objectTStack.LastElem->objectTText, false, delNested, true);
+            free(objectTStack.LastElem->objectTText);
         }
         if (objectTStack.LastElem != objectTStack.FirstElem) {
-			delete objectTStack.LastElem;
+			free(objectTStack.LastElem);
 			objectTStack.LastElem = tmp;
 			objectTStack.LastElem->Next = nullptr;
 		} else {
-			delete objectTStack.LastElem;
+			free(objectTStack.LastElem);
 			objectTStack.FirstElem = nullptr;
         }
         std::cout << (showMsg ? "Element has been deleted\n" : "");
@@ -82,7 +82,7 @@ void TakeTStackElem(TObjectTStack& objectTStack) {
     if (objectTStack.FirstElem) {
 		if (objectTStack.CurrentElem) {
 			ClearTText(objectTStack.CurrentElem, false, true, true);
-			delete objectTStack.CurrentElem;
+			free(objectTStack.CurrentElem);
 		}
 		objectTStack.CurrentElem = objectTStack.LastElem->objectTText;
         std::cout << "Taken element:" << std::endl;
@@ -110,18 +110,31 @@ void ChangeTStackElem(TObjectTStack& objectTStack) {
 }
 
 void AddTStackElem(TObjectTStack& objectTStack) {
-    auto* newElem = new TObjectTText;
+    auto newElem = (TObjectTText*)malloc(sizeof(TObjectTText));
+    auto tmpStack = (TStack*)malloc(sizeof(TStack));
+
+    if (!newElem || !tmpStack) {
+        std::cout << "Error allocate memory, element does not add" << std::endl;
+        if (newElem) {
+            free(newElem);
+        }
+        if (tmpStack) {
+            free(tmpStack);
+        }
+        return;
+    }
     if (!MenuText(newElem)) {
-		delete newElem;
+		free(newElem);
+		free(tmpStack);
 		std::cout << "Nested structure is empty, element does not add" << std::endl;
 		return;
     }
     if (objectTStack.FirstElem) {
-        objectTStack.LastElem->Next = new TStack;
+        objectTStack.LastElem->Next = tmpStack;
         objectTStack.LastElem = objectTStack.LastElem->Next;
         objectTStack.LastElem->objectTText = newElem;
     } else {
-        objectTStack.FirstElem = new TStack;
+        objectTStack.FirstElem =  tmpStack;
         objectTStack.FirstElem->objectTText = newElem;
         objectTStack.LastElem = objectTStack.FirstElem;
     }
@@ -204,10 +217,10 @@ void MenuStack() {
             ClearTStack(stack, false);
             if (stack.CurrentElem) {
             	ClearTText(stack.CurrentElem, false, true, true);
-            	delete stack.CurrentElem;
+            	free(stack.CurrentElem);
             }
         } else if (operation > 1 && operation < 11) {
-            std::cout << "Use operation begin work" << std::endl;
+            std::cout << "Work is prohibited" << std::endl;
         } else {
         	std::cout << "Choose right operation" << std::endl;
         }
