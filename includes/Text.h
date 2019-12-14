@@ -27,7 +27,7 @@ struct TObjectTText {
 void ClearObjectTText(TObjectTText *objectTText);
 //---------------------------------------------//
 
-//The text functions
+//The text`s functions
 void BeginWorkTText(TObjectTText* objectTText);
 void ClearTText(TObjectTText* objectTText, bool showMsg, bool delNested, bool callNotCurrent);
 void TextIsEmpty(TObjectTText* objectTText);
@@ -50,7 +50,7 @@ void AddElemAfterTText(TObjectTText* objectTText);
 void PrintText(TObjectTText* objectTText);
 void EndWorkTText(TObjectTText* objectTText);
 
-//Menu text functions
+//Menu text`s functions
 //---------------------------------------------//
 int ChooseTTextOperation();
 bool MenuText(TObjectTText* objectTText);

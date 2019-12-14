@@ -24,7 +24,7 @@ struct TObjectTStack {
 void ClearObjectTStack(TObjectTStack& objectTStack);
 //---------------------------------------------//
 
-//The stack functions
+//The stack`s functions
 void BeginWorkTStack(TObjectTStack& objectTStack);
 void CleanTStack(TObjectTStack &objectTStack, bool showMsg, size_t &size);
 void StackIsEmpty(TObjectTStack& objectTStack);
@@ -36,7 +36,7 @@ void AddTStackElem(TObjectTStack &objectTStack, size_t &size);
 void PrintTStack(TObjectTStack& objectTStack);
 void EndWorkTStack(TObjectTStack& objectTStack);
 
-//Menu stack functions
+//Menu stack`s functions
 //---------------------------------------------//
 int ChooseTStackOperation();
 void MenuStack();

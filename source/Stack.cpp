@@ -10,7 +10,7 @@ void ClearObjectTStack(TObjectTStack& objectTStack) {
     objectTStack.LastElem = nullptr;
 }
 //---------------------------------------------//
-//The stack functions
+//The stack`s functions
 
 //A function to start working
 void BeginWorkTStack(TObjectTStack& objectTStack) {
@@ -21,13 +21,13 @@ void BeginWorkTStack(TObjectTStack& objectTStack) {
 //A function to clean stack
 void CleanTStack(TObjectTStack &objectTStack, bool showMsg, size_t &size) {
     TStack* del = nullptr;
-
+	//Checking pointers
     if (objectTStack.FirstElem) {
     	//Iterating over stack elements
         while (objectTStack.FirstElem) {
             del = objectTStack.FirstElem;
             objectTStack.FirstElem = objectTStack.FirstElem->Next;
-			//Clearing nested stack structures
+			//Clearing nested stack structures, without messages
             ClearTText(del->objectTText, false, true,true);
             free(del->objectTText);
             free(del);
@@ -66,7 +66,7 @@ void ShowTStackElem(TObjectTStack& objectTStack) {
 //A function to deleting a top stack`s element
 void DelTStackElem(TObjectTStack &objectTStack, bool showMsg, bool delNested, size_t &size) {
     TStack* tmp = nullptr;
-
+	//Checking pointers
     if (objectTStack.FirstElem) {
 		//Brute force elements to the penultimate
         tmp = objectTStack.FirstElem;
@@ -78,7 +78,6 @@ void DelTStackElem(TObjectTStack &objectTStack, bool showMsg, bool delNested, si
             ClearTText(objectTStack.LastElem->objectTText, false, delNested, true);
             free(objectTStack.LastElem->objectTText);
         }
-
         if (objectTStack.LastElem != objectTStack.FirstElem) {
 			//Delete if the item is not the first
 			free(objectTStack.LastElem);
@@ -101,6 +100,7 @@ void DelTStackElem(TObjectTStack &objectTStack, bool showMsg, bool delNested, si
 
 //A function to taking a top stack`s element
 void TakeTStackElem(TObjectTStack &objectTStack, size_t &size) {
+	//Checking pointers
     if (objectTStack.FirstElem) {
     	//Clearing memory if there is something in the taken element
 		if (objectTStack.CurrentElem) {
@@ -123,6 +123,7 @@ void TakeTStackElem(TObjectTStack &objectTStack, size_t &size) {
 
 //A function to changing a top stack`s element
 void ChangeTStackElem(TObjectTStack &objectTStack, size_t &size) {
+	//Checking pointers
     if (objectTStack.FirstElem) {
     	//Go to the text menu
         if (!MenuText(objectTStack.LastElem->objectTText)) {
@@ -185,7 +186,7 @@ void AddTStackElem(TObjectTStack &objectTStack, size_t &size) {
 //A function to printing stack`s elements
 void PrintTStack(TObjectTStack& objectTStack) {
     TStack* tmp = nullptr;
-
+	//Checking pointers
     if (objectTStack.FirstElem) {
         tmp = objectTStack.FirstElem;
         for (int i = 1; tmp != nullptr; ++i, tmp = tmp->Next) {
@@ -263,7 +264,7 @@ void MenuStack() {
         } else if (operation == 1) {
             BeginWorkTStack(stack);
         } else if (operation == 11) {
-        	//Shutdown and clear all memory
+        	//Shutdown and clear all memory, without messages
             loop = false;
 			CleanTStack(stack, false, size);
             if (stack.CurrentElem) {

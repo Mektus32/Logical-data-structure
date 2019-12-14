@@ -2,13 +2,16 @@
 
 #include <iostream>
 
+//Additional functions
 //---------------------------------------------//
+//The function text the text parameters
 void ClearObjectTWordsList(TObjectTWordsList* objectTWordsList) {
 	objectTWordsList->FirstElem = nullptr;
 	objectTWordsList->LastElem = nullptr;
 	objectTWordsList->Worked = nullptr;
 }
 
+//The function that give character or digit
 int InputManager(bool value = false) {
 	char c = '\0';
 	char clear = '\0';
@@ -33,6 +36,7 @@ int InputManager(bool value = false) {
 	}
 }
 
+//Function creating string
 char* CreateString() {
     char* str = nullptr;
     size_t size = 1;
@@ -64,25 +68,31 @@ char* CreateString() {
     return str;
 }
 //---------------------------------------------//
+//The list`s functions
 
+//A function to start working
 void BeginWorkTWordsList(TObjectTWordsList* objectTWordsList) {
 	objectTWordsList->Available = true;
 	std::cout << "Work with words list is available" << std::endl;
 }
 
+//A function to clean list
 void ClearTWordsList(TObjectTWordsList* objectTWordsList, bool showMsg = true, bool callNotCurrent = true) {
 	TWordsList* del = nullptr;
-
+	//Checking pointers
 	if (objectTWordsList->FirstElem) {
+		//If calling not current level structure we should freed memory in variable currentElement
 		if (callNotCurrent && objectTWordsList->CurrentElem) {
 			free(objectTWordsList->CurrentElem);
 		}
+		//Iterating over text elements
 		while (objectTWordsList->FirstElem) {
 			del = objectTWordsList->FirstElem;
 			objectTWordsList->FirstElem = objectTWordsList->FirstElem->Next;
 			free(del->Word);
 			free(del);
 		}
+		//When deleting, you do not always need to show messages, they are shown in the calling function
 		std::cout << (showMsg ? "Words list has been cleared\n" : "");
 	} else {
 		std::cout << (showMsg ? "Words list is empty, can`t clear list\n" : "");
@@ -90,6 +100,7 @@ void ClearTWordsList(TObjectTWordsList* objectTWordsList, bool showMsg = true, b
 	}
 }
 
+//A function to check emptiness list
 void ListIsEmpty(TObjectTWordsList* objectTWordsList) {
 	if (!objectTWordsList->FirstElem) {
 		std::cout << "Words list is empty" << std::endl;
@@ -99,7 +110,9 @@ void ListIsEmpty(TObjectTWordsList* objectTWordsList) {
 	}
 }
 
+//The function setting working pointer on the first element
 void SetOnFirstElemTWordsList(TObjectTWordsList* objectTWordsList) {
+	//Checking pointers
 	if (objectTWordsList->FirstElem) {
 		objectTWordsList->Worked = objectTWordsList->FirstElem;
 		std::cout << "Work pointer on first element" << std::endl;
@@ -109,7 +122,9 @@ void SetOnFirstElemTWordsList(TObjectTWordsList* objectTWordsList) {
 	}
 }
 
+//The function checks that the working pointer is on the last element
 void OnLastElemTWordsList(TObjectTWordsList* objectTWordsList) {
+	//Checking pointers
 	if (objectTWordsList->FirstElem) {
 		if (objectTWordsList->Worked == objectTWordsList->LastElem) {
 			std::cout << "Work pointer on last element" << std::endl;
@@ -122,13 +137,16 @@ void OnLastElemTWordsList(TObjectTWordsList* objectTWordsList) {
 	}
 }
 
+//A function to moving work pointer forward
 void MoveForwardTWordsList(TObjectTWordsList* objectTWordsList) {
+	//Checking pointers
 	if (objectTWordsList->FirstElem) {
 		if (!objectTWordsList->Worked) {
 			std::cout << "Work pointer is nullptr.., can`t move forward" << std::endl;
 		} else if (!objectTWordsList->Worked->Next) {
 			std::cout << "Work pointer on last element, can`t move forward" << std::endl;
 		} else {
+			//Move work pointer forward
 			objectTWordsList->Worked = objectTWordsList->Worked->Next;
 			std::cout << "Work pointer moved on one element" << std::endl;
 		}
@@ -138,7 +156,9 @@ void MoveForwardTWordsList(TObjectTWordsList* objectTWordsList) {
 	}
 }
 
+//A function to show list`s element after work pointer
 void ShowElemAfterTWordsList(TObjectTWordsList* objectTWordsList) {
+	//Checking pointers
 	if (objectTWordsList->FirstElem) {
 		if (!objectTWordsList->Worked) {
 			std::cout << "Work pointer is nullptr.., can`t show next element" << std::endl;
@@ -153,9 +173,10 @@ void ShowElemAfterTWordsList(TObjectTWordsList* objectTWordsList) {
 	}
 }
 
+//A function to deleting list`s element after work pointer
 void DelElemAfterTWordsList(TObjectTWordsList* objectTWordsList, bool showMsg = true) {
 	TWordsList* del = nullptr;
-
+	//Checking pointers
 	if (objectTWordsList->FirstElem) {
 		if (!objectTWordsList->Worked) {
 			std::cout << (showMsg ? "Work pointer is nullptr.., can`t delete\n" : "");
@@ -163,9 +184,11 @@ void DelElemAfterTWordsList(TObjectTWordsList* objectTWordsList, bool showMsg = 
 			std::cout << (showMsg ? "Work pointer on last element, can`t delete\n" : "");
 		} else {
 			del = objectTWordsList->Worked->Next;
+			//Building links
 			objectTWordsList->Worked->Next = objectTWordsList->Worked->Next->Next;
 			free(del->Word);
 			free(del);
+			//When deleting, you do not always need to show messages, they are shown in the calling function
 			std::cout << (showMsg ? "Element has been deleted\n" : "");
 		}
 	} else {
@@ -174,7 +197,9 @@ void DelElemAfterTWordsList(TObjectTWordsList* objectTWordsList, bool showMsg = 
 	}
 }
 
+//A function to taking list`s element after work pointer
 void TakeElemAfterTWordsList(TObjectTWordsList* objectTWordsList) {
+	//Checking pointers
 	if (objectTWordsList->FirstElem) {
 		if (!objectTWordsList->Worked) {
 			std::cout << "Work pointer is nullptr.., can`t take next element" << std::endl;
@@ -182,10 +207,13 @@ void TakeElemAfterTWordsList(TObjectTWordsList* objectTWordsList) {
 			std::cout << "Work pointer on last element, can`t take next element" << std::endl;
 		} else {
 			std::cout << "Taken element: " << objectTWordsList->Worked->Next->Word << std::endl;
+			//Clearing memory if there is something in the taken element
 			if (objectTWordsList->CurrentElem) {
 			    free(objectTWordsList->CurrentElem);
 			}
+			//Pass the value to a separate variable
 			objectTWordsList->CurrentElem = strdup(objectTWordsList->Worked->Next->Word);
+			//We delete the element without messages about deletion
 			DelElemAfterTWordsList(objectTWordsList, false);
 		}
 	} else {
@@ -194,9 +222,10 @@ void TakeElemAfterTWordsList(TObjectTWordsList* objectTWordsList) {
 	}
 }
 
+//A function to changing list`s element after work pointer
 void ChangeElemAfterTWordsList(TObjectTWordsList* objectTWordsList) {
-	char clear = '\0';
-
+	char* newString = nullptr;
+	//Checking pointers
 	if (objectTWordsList->FirstElem) {
 		if (!objectTWordsList->Worked) {
 			std::cout << "Work pointer is nullptr.., can`t change next element" << std::endl;
@@ -204,9 +233,14 @@ void ChangeElemAfterTWordsList(TObjectTWordsList* objectTWordsList) {
 			std::cout << "Work pointer on last element, can`t change next element" << std::endl;
 		} else {
 			std::cout << "Input new word: ";
-			if (!(objectTWordsList->Worked->Next->Word = CreateString())) {
-			    return;
+			//If error creating string, element does not changed
+			if (!(newString = CreateString())) {
+				return;
 			}
+			//Freed old memory
+			free(objectTWordsList->Worked->Next->Word);
+			//Changing element
+			objectTWordsList->Worked->Next->Word = newString;
 		}
 	} else {
 		std::cout << "Words list is empty, can`t change next element" << std::endl;
@@ -214,44 +248,52 @@ void ChangeElemAfterTWordsList(TObjectTWordsList* objectTWordsList) {
 	}
 }
 
+//A function to add list`s element after work pointer
 void AddElemAfterTWordsList(TObjectTWordsList* objectTWordsList) {
+	//Creating a list object
 	auto newElem = (TWordsList*)calloc(sizeof(TWordsList), 1);
-	char clear = '\0';
 
 	if (!newElem) {
 	    std::cout << "Error allocate memory, element does not add" << std::endl;
 	    return;
 	}
 	std::cout << "Input new word: ";
+	//If error creating string, element does not add and freed memory
 	if (!(newElem->Word = CreateString())) {
 	    free(newElem);
 	    return;
 	}
 	if (!objectTWordsList->FirstElem) {
+		//Building links if the list is empty
 		objectTWordsList->FirstElem = newElem;
 		objectTWordsList->LastElem = newElem;
 		objectTWordsList->Worked = newElem;
 	} else if (!objectTWordsList->Worked) {
 		std::cout << "Work pointer is nullptr.., can`t add new element" << std::endl;
+		//If work pointer is nullptr, all memory is freed without messages
 		free(newElem->Word);
 		free(newElem);
 		return;
 	} else if (!objectTWordsList->Worked->Next) {
+		//Building links if the is not empty and work pointer has not next element
 		objectTWordsList->Worked->Next = newElem;
 		objectTWordsList->LastElem = newElem;
 	} else {
+		//Building links if the is not empty and work pointer has next element
 		newElem->Next = objectTWordsList->Worked->Next;
 		objectTWordsList->Worked->Next = newElem;
 	}
 	std::cout << "New element has been added" << std::endl;
 }
 
+//A function to printing list`s elements
 void PrintTWordsList(TObjectTWordsList* objectTWordsList, bool callNoCurrent = false) {
 	size_t beginStr = 0;
 	size_t endStr = 0;
 	bool whileNotWork = true;
-
+	//Checking pointers
 	if (objectTWordsList->FirstElem) {
+		//Data output and length calculation for working pointer output
 		for (auto tmp = objectTWordsList->FirstElem; tmp != nullptr; tmp = tmp->Next) {
 			if (tmp == objectTWordsList->Worked) {
 				whileNotWork = false;
@@ -263,9 +305,11 @@ void PrintTWordsList(TObjectTWordsList* objectTWordsList, bool callNoCurrent = f
 			std::cout << tmp->Word << " ";
 		}
 		std::cout << std::endl;
+		//Alignment if the call is not from the current structure
 		if (callNoCurrent) {
 			std::cout << "   ";
 		}
+		//The output working pointer
 		for (size_t i = 0; i < endStr; ++i) {
 			if (i == beginStr || i == endStr - 1) {
 				std::cout << '|';
@@ -279,6 +323,7 @@ void PrintTWordsList(TObjectTWordsList* objectTWordsList, bool callNoCurrent = f
 	}
 }
 
+//A function to finish working
 void EndWorkTWordsList(TObjectTWordsList* objectTWordsList) {
 	objectTWordsList->Available = false;
 	std::cout << "Work with words list is forbidden" << std::endl;
@@ -286,6 +331,7 @@ void EndWorkTWordsList(TObjectTWordsList* objectTWordsList) {
 
 //---------------------------------------------//
 int ChooseTWordsListOperation() {
+	//The divider output
 	std::cout << "////////////////////////////////////////////////////////////////////////" << std::endl;
 	std::cout << "Words list menu" << std::endl;
 	std::cout << "1.Begin work with words list" << std::endl;
@@ -313,8 +359,11 @@ bool MenuList(TObjectTWordsList* objectTWordsList) {
 	int operation;
 
 	while (loop) {
+		//Calling a list function that selects an operation
 		operation = ChooseTWordsListOperation();
+		//The divider output
 		std::cout << "////////////////////////////////////////////////////////////////////////" << std::endl;
+		//Select an action relative to the operation number
 		if (objectTWordsList->Available) {
 			switch (operation) {
 				case 1: BeginWorkTWordsList(objectTWordsList); break;
@@ -334,6 +383,7 @@ bool MenuList(TObjectTWordsList* objectTWordsList) {
 				case 15: exit(0);
 				default: std::cout << "Choose right operation" << std::endl;
 			}
+			//Print list after operations
 			if (operation != 12 && operation != 14) {
 				if (objectTWordsList->FirstElem) {
 					PrintTWordsList(objectTWordsList);
@@ -354,7 +404,9 @@ bool MenuList(TObjectTWordsList* objectTWordsList) {
 			std::cout << "Choose right operation" << std::endl;
 		}
 	}
-	std::cout << "////////////////////////////////////////////////////////////////////////1" << std::endl;
+	//The divider output
+	std::cout << "////////////////////////////////////////////////////////////////////////" << std::endl;
+	//Determines whether the list is empty after working with it
 	return objectTWordsList->FirstElem;
 }
 //---------------------------------------------//

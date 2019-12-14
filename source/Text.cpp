@@ -4,14 +4,14 @@
 
 //Additional function
 //---------------------------------------------//
-//The function text the stack parameters
+//The function clears the text parameters
 void ClearObjectTText(TObjectTText *objectTText) {
     objectTText->FirstElem = nullptr;
     objectTText->LastElem = nullptr;
     objectTText->Worked = nullptr;
 }
 //---------------------------------------------//
-//The stack functions
+//The text`s functions
 
 //A function to start working
 void BeginWorkTText(TObjectTText *objectTText) {
@@ -22,7 +22,7 @@ void BeginWorkTText(TObjectTText *objectTText) {
 //A function to clean text
 void ClearTText(TObjectTText* objectTText, bool showMsg = true, bool delNested = true, bool callNotCurrent = true) {
     TText* del = nullptr;
-
+	//Checking pointers
     if (objectTText->FirstElem) {
     	//If calling not current level structure we should freed memory in variable currentElement
 		if (callNotCurrent && objectTText->CurrentElem) {
@@ -60,6 +60,7 @@ void TextIsEmpty(TObjectTText *objectTText) {
 
 //The function setting working pointer on the first element
 void SetOnFirstElemTText(TObjectTText* objectTText) {
+	//Checking pointers
     if (objectTText->FirstElem) {
         objectTText->Worked = objectTText->FirstElem;
         std::cout << "Work pointer on first element" << std::endl;
@@ -71,6 +72,7 @@ void SetOnFirstElemTText(TObjectTText* objectTText) {
 
 //The function setting working pointer on the last element
 void SetOnLastElemTText(TObjectTText* objectTText) {
+	//Checking pointers
     if (objectTText->FirstElem) {
         objectTText->Worked = objectTText->LastElem;
         std::cout << "Work pointer on last element" << std::endl;
@@ -82,6 +84,7 @@ void SetOnLastElemTText(TObjectTText* objectTText) {
 
 //The function checks that the working pointer is on the first element
 void OnFirstElemTText(TObjectTText* objectTText) {
+	//Checking pointers
     if (objectTText->FirstElem) {
         if (objectTText->FirstElem == objectTText->Worked) {
             std::cout << "Work pointer on fist element" << std::endl;
@@ -96,6 +99,7 @@ void OnFirstElemTText(TObjectTText* objectTText) {
 
 //The function checks that the working pointer is on the last element
 void OnLastElemTText(TObjectTText* objectTText) {
+	//Checking pointers
     if (objectTText->FirstElem) {
         if (objectTText->LastElem == objectTText->Worked) {
             std::cout << "Work pointer on last element" << std::endl;
@@ -110,6 +114,7 @@ void OnLastElemTText(TObjectTText* objectTText) {
 
 //A function to moving work pointer forward
 void MoveForwardTText(TObjectTText* objectTText) {
+	//Checking pointers
     if (objectTText->FirstElem) {
         if (!objectTText->Worked) {
             std::cout << "Work pointer invalid, can`t move forward" << std::endl;
@@ -128,6 +133,7 @@ void MoveForwardTText(TObjectTText* objectTText) {
 
 //A function to moving work pointer back
 void MoveBackTText(TObjectTText* objectTText) {
+	//Checking pointers
     if (objectTText->FirstElem) {
         if (!objectTText->Worked) {
             std::cout << "Work pointer invalid, can`t move back" << std::endl;
@@ -146,6 +152,7 @@ void MoveBackTText(TObjectTText* objectTText) {
 
 //A function to show text`s element before work pointer
 void ShowElemBeforeTText(TObjectTText* objectTText) {
+	//Checking pointers
     if (objectTText->FirstElem) {
 		if (!objectTText->Worked) {
 			std::cout << "Work pointer invalid, can`t show before" << std::endl;
@@ -164,6 +171,7 @@ void ShowElemBeforeTText(TObjectTText* objectTText) {
 
 //A function to show text`s element after work pointer
 void ShowElemAfterTText(TObjectTText* objectTText) {
+	//Checking pointers
 	if (objectTText->FirstElem) {
 		if (!objectTText->Worked) {
 			std::cout << "Work pointer invalid, can`t show after" << std::endl;
@@ -183,7 +191,7 @@ void ShowElemAfterTText(TObjectTText* objectTText) {
 //A function to deleting text`s element before work pointer
 void DelElemBeforeTText(TObjectTText *objectTText, bool showMsg = true, bool delNested = true) {
 	TText* del = nullptr;
-
+	//Checking pointers
 	if (objectTText->FirstElem) {
 		if (!objectTText->Worked) {
 			std::cout << (showMsg ? "Work pointer invalid, can`t delete element before\n" : "");
@@ -216,7 +224,7 @@ void DelElemBeforeTText(TObjectTText *objectTText, bool showMsg = true, bool del
 //A function to deleting text`s element after work pointer
 void DelElemAfterTText(TObjectTText *objectTText, bool showMsg = true, bool delNested = true) {
 	TText* del = nullptr;
-
+	//Checking pointers
 	if (objectTText->FirstElem) {
 		if (!objectTText->Worked) {
 			std::cout << (showMsg ? "Work pointer invalid, can`t delete element after\n" : "");
@@ -248,6 +256,7 @@ void DelElemAfterTText(TObjectTText *objectTText, bool showMsg = true, bool delN
 
 //A function to taking text`s element before work pointer
 void TakeElemBeforeTText(TObjectTText* objectTText) {
+	//Checking pointers
 	if (objectTText->FirstElem) {
 		if (!objectTText->Worked) {
 			std::cout << "Work pointer invalid, can`t take before" << std::endl;
@@ -276,6 +285,7 @@ void TakeElemBeforeTText(TObjectTText* objectTText) {
 
 //A function to taking text`s element after work pointer
 void TakeElemAfterTText(TObjectTText* objectTText) {
+	//Checking pointers
 	if (objectTText->FirstElem) {
 		if (!objectTText->Worked) {
 			std::cout << "Work pointer invalid, can`t take after" << std::endl;
@@ -304,6 +314,7 @@ void TakeElemAfterTText(TObjectTText* objectTText) {
 
 //A function to changing text`s element before work pointer
 void ChangeElemBeforeTText(TObjectTText* objectTText) {
+	//Checking pointers
 	if (objectTText->FirstElem) {
 		if (!objectTText->Worked) {
 			std::cout << "Work pointer invalid, can`t change before" << std::endl;
@@ -326,6 +337,7 @@ void ChangeElemBeforeTText(TObjectTText* objectTText) {
 
 //A function to changing text`s element after work pointer
 void ChangeElemAfterTText(TObjectTText* objectTText) {
+	//Checking pointers
 	if (objectTText->FirstElem) {
 		if (!objectTText->Worked) {
 			std::cout << "Work pointer invalid, can`t change after" << std::endl;
@@ -458,6 +470,7 @@ void AddElemAfterTText(TObjectTText* objectTText) {
 
 //A function to printing text`s elements
 void PrintText(TObjectTText* objectTText) {
+	//Checking pointers
 	if (objectTText->FirstElem) {
 		for (auto tmp = objectTText->FirstElem; tmp != nullptr; tmp = tmp->Next) {
 			//Align the output and output of the working pointer
