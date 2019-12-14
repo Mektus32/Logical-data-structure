@@ -14,7 +14,7 @@ void BeginWorkTStack(TObjectTStack& objectTStack) {
     std::cout << "Work with stack is available" << std::endl;
 }
 
-void ClearTStack(TObjectTStack& objectTStack, bool showMsg = true) {
+void ClearTStack(TObjectTStack &objectTStack, bool showMsg, size_t &size) {
     TStack* del = nullptr;
 
     if (objectTStack.FirstElem) {
@@ -25,6 +25,7 @@ void ClearTStack(TObjectTStack& objectTStack, bool showMsg = true) {
             free(del->objectTText);
             free(del);
         }
+        size = 0;
         std::cout << (showMsg ? "Stack has been cleared\n" : "");
     } else {
         std::cout << (showMsg ? "Stack is empty, can`t clear\n" : "");
@@ -51,7 +52,7 @@ void ShowTStackElem(TObjectTStack& objectTStack) {
     }
 }
 
-void DelTStackElem(TObjectTStack& objectTStack, bool showMsg = true, bool delNested = true) {
+void DelTStackElem(TObjectTStack &objectTStack, bool showMsg, bool delNested, size_t &size) {
     TStack* tmp = nullptr;
 
     if (objectTStack.FirstElem) {
@@ -71,6 +72,7 @@ void DelTStackElem(TObjectTStack& objectTStack, bool showMsg = true, bool delNes
 			free(objectTStack.LastElem);
 			objectTStack.FirstElem = nullptr;
         }
+        --size;
         std::cout << (showMsg ? "Element has been deleted\n" : "");
     } else {
         std::cout << (showMsg ? "Stack is empty, can`t delete element\n" : "");
@@ -78,7 +80,7 @@ void DelTStackElem(TObjectTStack& objectTStack, bool showMsg = true, bool delNes
     }
 }
 
-void TakeTStackElem(TObjectTStack& objectTStack) {
+void TakeTStackElem(TObjectTStack &objectTStack, size_t &size) {
     if (objectTStack.FirstElem) {
 		if (objectTStack.CurrentElem) {
 			ClearTText(objectTStack.CurrentElem, false, true, true);
@@ -87,7 +89,7 @@ void TakeTStackElem(TObjectTStack& objectTStack) {
 		objectTStack.CurrentElem = objectTStack.LastElem->objectTText;
         std::cout << "Taken element:" << std::endl;
         PrintText(objectTStack.LastElem->objectTText);
-        DelTStackElem(objectTStack, false, false);
+		DelTStackElem(objectTStack, false, false, size);
 
     } else {
         std::cout << "Stack is empty, can`t take element" << std::endl;
@@ -95,10 +97,10 @@ void TakeTStackElem(TObjectTStack& objectTStack) {
     }
 }
 
-void ChangeTStackElem(TObjectTStack& objectTStack) {
+void ChangeTStackElem(TObjectTStack &objectTStack, size_t &size) {
     if (objectTStack.FirstElem) {
         if (!MenuText(objectTStack.LastElem->objectTText)) {
-			DelTStackElem(objectTStack, false);
+			DelTStackElem(objectTStack, false, false, size);
         	std::cout << "Nested structure is empty, element has been deleted" << std::endl;
         	return;
         }
@@ -109,9 +111,13 @@ void ChangeTStackElem(TObjectTStack& objectTStack) {
     }
 }
 
-void AddTStackElem(TObjectTStack& objectTStack) {
-    auto newElem = (TObjectTText*)malloc(sizeof(TObjectTText));
-    auto tmpStack = (TStack*)malloc(sizeof(TStack));
+void AddTStackElem(TObjectTStack &objectTStack, size_t &size) {
+	if (size >= 10) {
+		std::cout << "Size limit" << std::endl;
+		return;
+	}
+    auto newElem = (TObjectTText*)calloc(sizeof(TObjectTText), 1);
+    auto tmpStack = (TStack*)calloc(sizeof(TStack), 1);
 
     if (!newElem || !tmpStack) {
         std::cout << "Error allocate memory, element does not add" << std::endl;
@@ -138,6 +144,7 @@ void AddTStackElem(TObjectTStack& objectTStack) {
         objectTStack.FirstElem->objectTText = newElem;
         objectTStack.LastElem = objectTStack.FirstElem;
     }
+    ++size;
     std::cout << "Element has been added" << std::endl;
 }
 
@@ -163,8 +170,6 @@ void EndWorkTStack(TObjectTStack& objectTStack) {
 
 //---------------------------------------------//
 int ChooseTStackOperation() {
-    //system("pause");
-    //system("cls");
     std::cout << "////////////////////////////////////////////////////////////////////////" << std::endl;
     std::cout << "Stack menu" << std::endl;
     std::cout << "1.Begin work with stack" << std::endl;
@@ -184,6 +189,7 @@ int ChooseTStackOperation() {
 
 void MenuStack() {
     TObjectTStack stack;
+	size_t size = 0;
     bool loop = true;
     int operation;
 
@@ -193,13 +199,13 @@ void MenuStack() {
         if (stack.Available) {
             switch (operation) {
                 case 1: BeginWorkTStack(stack); break;
-                case 2: ClearTStack(stack); break;
+                case 2: ClearTStack(stack, false, size); break;
                 case 3: StackIsEmpty(stack); break;
                 case 4: ShowTStackElem(stack); break;
-                case 5: DelTStackElem(stack); break;
-                case 6: TakeTStackElem(stack); break;
-                case 7: ChangeTStackElem(stack); break;
-                case 8: AddTStackElem(stack); break;
+                case 5: DelTStackElem(stack, false, false, size); break;
+                case 6: TakeTStackElem(stack, size); break;
+                case 7: ChangeTStackElem(stack, size); break;
+                case 8: AddTStackElem(stack, size); break;
                 case 9: PrintTStack(stack); break;
                 case 10 : EndWorkTStack(stack); break;
                 case 11 : loop = false; break;
@@ -214,7 +220,7 @@ void MenuStack() {
             BeginWorkTStack(stack);
         } else if (operation == 11) {
             loop = false;
-            ClearTStack(stack, false);
+			ClearTStack(stack, false, size);
             if (stack.CurrentElem) {
             	ClearTText(stack.CurrentElem, false, true, true);
             	free(stack.CurrentElem);

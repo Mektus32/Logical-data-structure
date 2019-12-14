@@ -20,13 +20,13 @@ void ClearObjectTStack(TObjectTStack& objectTStack);
 //---------------------------------------------//
 
 void BeginWorkTStack(TObjectTStack& objectTStack);
-void ClearTStack(TObjectTStack& objectTStack, bool showMsg);
+void ClearTStack(TObjectTStack &objectTStack, bool showMsg, size_t &size);
 void StackIsEmpty(TObjectTStack& objectTStack);
 void ShowTStackElem(TObjectTStack& objectTStack);
-void DelTStackElem(TObjectTStack& objectTStack, bool showMsg, bool delNested);
-void TakeTStackElem(TObjectTStack& objectTStack);
-void ChangeTStackElem(TObjectTStack& objectTStack);
-void AddTStackElem(TObjectTStack& objectTStack);
+void DelTStackElem(TObjectTStack &objectTStack, bool showMsg, bool delNested, size_t &size);
+void TakeTStackElem(TObjectTStack &objectTStack, size_t &size);
+void ChangeTStackElem(TObjectTStack &objectTStack, size_t &size);
+void AddTStackElem(TObjectTStack &objectTStack, size_t &size);
 void PrintTStack(TObjectTStack& objectTStack);
 void EndWorkTStack(TObjectTStack& objectTStack);
 

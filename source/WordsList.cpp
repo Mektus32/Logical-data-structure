@@ -80,6 +80,7 @@ void ClearTWordsList(TObjectTWordsList* objectTWordsList, bool showMsg = true, b
 		while (objectTWordsList->FirstElem) {
 			del = objectTWordsList->FirstElem;
 			objectTWordsList->FirstElem = objectTWordsList->FirstElem->Next;
+			free(del->Word);
 			free(del);
 		}
 		std::cout << (showMsg ? "Words list has been cleared\n" : "");
@@ -214,7 +215,7 @@ void ChangeElemAfterTWordsList(TObjectTWordsList* objectTWordsList) {
 }
 
 void AddElemAfterTWordsList(TObjectTWordsList* objectTWordsList) {
-	auto newElem = (TWordsList*)malloc(sizeof(TWordsList));
+	auto newElem = (TWordsList*)calloc(sizeof(TWordsList), 1);
 	char clear = '\0';
 
 	if (!newElem) {
@@ -285,8 +286,6 @@ void EndWorkTWordsList(TObjectTWordsList* objectTWordsList) {
 
 //---------------------------------------------//
 int ChooseTWordsListOperation() {
-	//system("pause");
-	//system("cls");
 	std::cout << "////////////////////////////////////////////////////////////////////////" << std::endl;
 	std::cout << "Words list menu" << std::endl;
 	std::cout << "1.Begin work with words list" << std::endl;

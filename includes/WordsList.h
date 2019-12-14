@@ -4,14 +4,14 @@
 #include <cstring>
 
 struct TWordsList {
-	char* Word;
+	char* Word = nullptr;
 	TWordsList* Next = nullptr;
 };
 
 struct TObjectTWordsList {
 	TWordsList* FirstElem = nullptr;
 	TWordsList* LastElem = nullptr;
-	char* CurrentElem;
+	char* CurrentElem = nullptr;
 	TWordsList* Worked = nullptr;
 	bool Available = false;
 };

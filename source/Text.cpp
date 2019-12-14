@@ -20,6 +20,7 @@ void ClearTText(TObjectTText* objectTText, bool showMsg = true, bool delNested =
 
     if (objectTText->FirstElem) {
 		if (callNotCurrent && objectTText->CurrentElem) {
+			ClearTWordsList(objectTText->CurrentElem, false, true);
 			free(objectTText->CurrentElem);
 		}
         while (objectTText->FirstElem) {
@@ -114,7 +115,7 @@ void MoveBackTText(TObjectTText* objectTText) {
         if (!objectTText->Worked) {
             std::cout << "Work pointer invalid, can`t move back" << std::endl;
         } else if (!objectTText->Worked->Prev) {
-            std::cout << "Work pointer on last element, can`t move back" << std::endl;
+            std::cout << "Work pointer on first element, can`t move back" << std::endl;
         } else {
             objectTText->Worked = objectTText->Worked->Prev;
             std::cout << "Work pointer moved on previous element" << std::endl;
@@ -130,7 +131,7 @@ void ShowElemBeforeTText(TObjectTText* objectTText) {
 		if (!objectTText->Worked) {
 			std::cout << "Work pointer invalid, can`t show before" << std::endl;
 		} else if (!objectTText->Worked->Prev) {
-			std::cout << "Work pointer on last element, can`t show before" << std::endl;
+			std::cout << "Work pointer on first element, can`t show before" << std::endl;
 		} else {
 			std::cout << "Element:" << std::endl;
 			PrintTWordsList(objectTText->Worked->Prev->objectTWordsList, false);
@@ -166,7 +167,7 @@ void DelElemBeforeTText(TObjectTText *objectTText, bool showMsg = true, bool del
 		if (!objectTText->Worked) {
 			std::cout << (showMsg ? "Work pointer invalid, can`t delete element before\n" : "");
 		} else if (!objectTText->Worked->Prev) {
-			std::cout << (showMsg ? "Work pointer on last element, can`t delete element before\n" : "");
+			std::cout << (showMsg ? "Work pointer on first element, can`t delete element before\n" : "");
 		} else {
 			del = objectTText->Worked->Prev;
 			objectTText->Worked->Prev = objectTText->Worked->Prev->Prev;
@@ -222,7 +223,7 @@ void TakeElemBeforeTText(TObjectTText* objectTText) {
 		if (!objectTText->Worked) {
 			std::cout << "Work pointer invalid, can`t take before" << std::endl;
 		} else if (!objectTText->Worked->Prev) {
-			std::cout << "Work pointer on last element, can`t take before" << std::endl;
+			std::cout << "Work pointer on first element, can`t take before" << std::endl;
 		} else {
 			if (objectTText->CurrentElem) {
 				ClearTWordsList(objectTText->CurrentElem, false, true);
@@ -268,7 +269,7 @@ void ChangeElemBeforeTText(TObjectTText* objectTText) {
 		if (!objectTText->Worked) {
 			std::cout << "Work pointer invalid, can`t change before" << std::endl;
 		} else if (!objectTText->Worked->Prev) {
-			std::cout << "Work pointer on last element, can`t change before" << std::endl;
+			std::cout << "Work pointer on first element, can`t change before" << std::endl;
 		} else {
 		    if (!MenuList(objectTText->Worked->Prev->objectTWordsList)) {
 		        DelElemBeforeTText(objectTText, false);
@@ -300,8 +301,8 @@ void ChangeElemAfterTText(TObjectTText* objectTText) {
 }
 
 void AddElemBeforeTText(TObjectTText* objectTText) {
-	auto newElem = (TObjectTWordsList*)malloc(sizeof(TObjectTWordsList));
-	auto tmpText = (TText*)malloc(sizeof(TText));
+	auto newElem = (TObjectTWordsList*)calloc(sizeof(TObjectTWordsList), 1);
+	auto tmpText = (TText*)calloc(sizeof(TText), 1);
 
 	if (!newElem || !tmpText) {
 	    std::cout << "Error allocate memory, element does not add" << std::endl;
@@ -347,8 +348,8 @@ void AddElemBeforeTText(TObjectTText* objectTText) {
 }
 
 void AddElemAfterTText(TObjectTText* objectTText) {
-	auto newElem = (TObjectTWordsList*)malloc(sizeof(TObjectTWordsList));
-	auto tmpText = (TText*)malloc(sizeof(TText));
+	auto newElem = (TObjectTWordsList*)calloc(sizeof(TObjectTWordsList), 1);
+	auto tmpText = (TText*)calloc(sizeof(TText), 1);
 
     if (!newElem || !tmpText) {
         std::cout << "Error allocate memory, element does not add" << std::endl;
@@ -419,8 +420,6 @@ void EndWorkTText(TObjectTText* objectTText) {
 
 //---------------------------------------------//
 int ChooseTTextOperation() {
-	//system("pause");
-	//system("cls");
     std::cout << "////////////////////////////////////////////////////////////////////////" << std::endl;
 	std::cout << "Text menu" << std::endl;
 	std::cout << "1.Begin work with text" << std::endl;
