@@ -73,7 +73,7 @@ void DelTStackElem(TObjectTStack &objectTStack, bool showMsg, bool delNested, si
         while (tmp != objectTStack.LastElem && tmp->Next != objectTStack.LastElem) {
             tmp = tmp->Next;
         }
-        //Removing a nested structure defined in the calling function
+        //Removing a nested structure defined in the calling function, without messages
         if (delNested) {
             ClearTText(objectTStack.LastElem->objectTText, false, delNested, true);
             free(objectTStack.LastElem->objectTText);

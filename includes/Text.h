@@ -3,24 +3,31 @@
 
 #include "WordsList.h"
 
+//Type of text element that contains the list element type
 struct TText {
     TObjectTWordsList* objectTWordsList = nullptr;
     TText* Next = nullptr;
     TText* Prev = nullptr;
 };
 
+//The text object type that contains the text element type
 struct TObjectTText {
     TText* FirstElem = nullptr;
     TText* LastElem = nullptr;
+	//The variable containing the last element taken
 	TObjectTWordsList* CurrentElem = nullptr;
+	//Work pointer
     TText* Worked = nullptr;
+    //Variable access permissions to work
     bool Available = false;
 };
 
+//Additional function
 //---------------------------------------------//
 void ClearObjectTText(TObjectTText *objectTText);
 //---------------------------------------------//
 
+//The text functions
 void BeginWorkTText(TObjectTText* objectTText);
 void ClearTText(TObjectTText* objectTText, bool showMsg, bool delNested, bool callNotCurrent);
 void TextIsEmpty(TObjectTText* objectTText);
@@ -43,10 +50,9 @@ void AddElemAfterTText(TObjectTText* objectTText);
 void PrintText(TObjectTText* objectTText);
 void EndWorkTText(TObjectTText* objectTText);
 
+//Menu text functions
 //---------------------------------------------//
-
 int ChooseTTextOperation();
 bool MenuText(TObjectTText* objectTText);
-
 //---------------------------------------------//
 #endif

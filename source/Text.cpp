@@ -2,43 +2,53 @@
 
 #include <iostream>
 
+//Additional function
 //---------------------------------------------//
+//The function text the stack parameters
 void ClearObjectTText(TObjectTText *objectTText) {
     objectTText->FirstElem = nullptr;
     objectTText->LastElem = nullptr;
     objectTText->Worked = nullptr;
 }
 //---------------------------------------------//
+//The stack functions
 
+//A function to start working
 void BeginWorkTText(TObjectTText *objectTText) {
 	objectTText->Available = true;
     std::cout << "Work with text is available" << std::endl;
 }
 
+//A function to clean text
 void ClearTText(TObjectTText* objectTText, bool showMsg = true, bool delNested = true, bool callNotCurrent = true) {
     TText* del = nullptr;
 
     if (objectTText->FirstElem) {
+    	//If calling not current level structure we should freed memory in variable currentElement
 		if (callNotCurrent && objectTText->CurrentElem) {
 			ClearTWordsList(objectTText->CurrentElem, false, true);
 			free(objectTText->CurrentElem);
 		}
+		//Iterating over text elements
         while (objectTText->FirstElem) {
             del = objectTText->FirstElem;
             objectTText->FirstElem = objectTText->FirstElem->Next;
+			//Removing a nested structure defined in the calling function, without messages
             if (delNested) {
                 ClearTWordsList(del->objectTWordsList, false, true);
             	free(del->objectTWordsList);
             }
             free(del);
         }
-        showMsg ? std::cout << "Text has been cleared\n" << std::endl : std::cout << "";
+		//When deleting, you do not always need to show messages, they are shown in the calling function
+        std::cout << (showMsg ? "Text has been cleared\n" : "");
     } else {
-        showMsg ? std::cout << "Text is empty, can`t clear\n" : std::cout << "";
+        std::cout << (showMsg ? "Text is empty, can`t clear\n" : "");
     }
     ClearObjectTText(objectTText);
 }
 
+//A function to check emptiness text
 void TextIsEmpty(TObjectTText *objectTText) {
     if (objectTText->FirstElem) {
         std::cout << "Text is not empty" << std::endl;
@@ -48,6 +58,7 @@ void TextIsEmpty(TObjectTText *objectTText) {
     }
 }
 
+//The function setting working pointer on the first element
 void SetOnFirstElemTText(TObjectTText* objectTText) {
     if (objectTText->FirstElem) {
         objectTText->Worked = objectTText->FirstElem;
@@ -58,6 +69,7 @@ void SetOnFirstElemTText(TObjectTText* objectTText) {
     }
 }
 
+//The function setting working pointer on the last element
 void SetOnLastElemTText(TObjectTText* objectTText) {
     if (objectTText->FirstElem) {
         objectTText->Worked = objectTText->LastElem;
@@ -68,6 +80,7 @@ void SetOnLastElemTText(TObjectTText* objectTText) {
     }
 }
 
+//The function checks that the working pointer is on the first element
 void OnFirstElemTText(TObjectTText* objectTText) {
     if (objectTText->FirstElem) {
         if (objectTText->FirstElem == objectTText->Worked) {
@@ -81,6 +94,7 @@ void OnFirstElemTText(TObjectTText* objectTText) {
     }
 }
 
+//The function checks that the working pointer is on the last element
 void OnLastElemTText(TObjectTText* objectTText) {
     if (objectTText->FirstElem) {
         if (objectTText->LastElem == objectTText->Worked) {
@@ -94,6 +108,7 @@ void OnLastElemTText(TObjectTText* objectTText) {
     }
 }
 
+//A function to moving work pointer forward
 void MoveForwardTText(TObjectTText* objectTText) {
     if (objectTText->FirstElem) {
         if (!objectTText->Worked) {
@@ -101,6 +116,7 @@ void MoveForwardTText(TObjectTText* objectTText) {
         } else if (!objectTText->Worked->Next) {
             std::cout << "Work pointer on last element, can`t move forward" << std::endl;
         } else {
+			//Move work pointer forward
             objectTText->Worked = objectTText->Worked->Next;
             std::cout << "Work pointer moved on next element" << std::endl;
         }
@@ -110,6 +126,7 @@ void MoveForwardTText(TObjectTText* objectTText) {
     }
 }
 
+//A function to moving work pointer back
 void MoveBackTText(TObjectTText* objectTText) {
     if (objectTText->FirstElem) {
         if (!objectTText->Worked) {
@@ -117,6 +134,7 @@ void MoveBackTText(TObjectTText* objectTText) {
         } else if (!objectTText->Worked->Prev) {
             std::cout << "Work pointer on first element, can`t move back" << std::endl;
         } else {
+        	//Move work pointer back
             objectTText->Worked = objectTText->Worked->Prev;
             std::cout << "Work pointer moved on previous element" << std::endl;
         }
@@ -126,6 +144,7 @@ void MoveBackTText(TObjectTText* objectTText) {
     }
 }
 
+//A function to show text`s element before work pointer
 void ShowElemBeforeTText(TObjectTText* objectTText) {
     if (objectTText->FirstElem) {
 		if (!objectTText->Worked) {
@@ -143,6 +162,7 @@ void ShowElemBeforeTText(TObjectTText* objectTText) {
     }
 }
 
+//A function to show text`s element after work pointer
 void ShowElemAfterTText(TObjectTText* objectTText) {
 	if (objectTText->FirstElem) {
 		if (!objectTText->Worked) {
@@ -160,6 +180,7 @@ void ShowElemAfterTText(TObjectTText* objectTText) {
 	}
 }
 
+//A function to deleting text`s element before work pointer
 void DelElemBeforeTText(TObjectTText *objectTText, bool showMsg = true, bool delNested = true) {
 	TText* del = nullptr;
 
@@ -170,17 +191,20 @@ void DelElemBeforeTText(TObjectTText *objectTText, bool showMsg = true, bool del
 			std::cout << (showMsg ? "Work pointer on first element, can`t delete element before\n" : "");
 		} else {
 			del = objectTText->Worked->Prev;
+			//Building links
 			objectTText->Worked->Prev = objectTText->Worked->Prev->Prev;
 			if (objectTText->Worked->Prev) {
                 objectTText->Worked->Prev->Next = objectTText->Worked;
             } else {
 			    objectTText->FirstElem = objectTText->Worked;
 			}
+			//Removing a nested structure defined in the calling function
 			if (delNested) {
                 ClearTWordsList(del->objectTWordsList, false, true);
 				free(del->objectTWordsList);
 			}
 			free(del);
+			//When deleting, you do not always need to show messages, they are shown in the calling function
 			std::cout << (showMsg ? "Element has been deleted\n" : "");
 		}
 	} else {
@@ -189,6 +213,7 @@ void DelElemBeforeTText(TObjectTText *objectTText, bool showMsg = true, bool del
 	}
 }
 
+//A function to deleting text`s element after work pointer
 void DelElemAfterTText(TObjectTText *objectTText, bool showMsg = true, bool delNested = true) {
 	TText* del = nullptr;
 
@@ -199,17 +224,20 @@ void DelElemAfterTText(TObjectTText *objectTText, bool showMsg = true, bool delN
 			std::cout << (showMsg ? "Work pointer on last element, can`t delete element after\n" : "");
 		} else {
 			del = objectTText->Worked->Next;
+			//Building links
 			objectTText->Worked->Next = objectTText->Worked->Next->Next;
 			if (objectTText->Worked->Next) {
                 objectTText->Worked->Next->Prev = objectTText->Worked;
             } else {
 			    objectTText->LastElem = objectTText->Worked;
 			}
+			//Removing a nested structure defined in the calling function
             if (delNested) {
                 ClearTWordsList(del->objectTWordsList, false, true);
 				free(del->objectTWordsList);
 			}
 			free(del);
+			//When deleting, you do not always need to show messages, they are shown in the calling function
 			std::cout << (showMsg ? "Element has been deleted\n" : "");
 		}
 	} else {
@@ -218,6 +246,7 @@ void DelElemAfterTText(TObjectTText *objectTText, bool showMsg = true, bool delN
 	}
 }
 
+//A function to taking text`s element before work pointer
 void TakeElemBeforeTText(TObjectTText* objectTText) {
 	if (objectTText->FirstElem) {
 		if (!objectTText->Worked) {
@@ -225,14 +254,18 @@ void TakeElemBeforeTText(TObjectTText* objectTText) {
 		} else if (!objectTText->Worked->Prev) {
 			std::cout << "Work pointer on first element, can`t take before" << std::endl;
 		} else {
+			//Clearing memory if there is something in the taken element
 			if (objectTText->CurrentElem) {
 				ClearTWordsList(objectTText->CurrentElem, false, true);
 				free(objectTText->CurrentElem);
 			}
+			//Pass the value to a separate variable
 			objectTText->CurrentElem = objectTText->Worked->Prev->objectTWordsList;
 			std::cout << "Taken element:" << std::endl;
 			PrintTWordsList(objectTText->CurrentElem, false);
 			std::cout << std::endl;
+			//We delete the element without messages about deletion and without deleting the nested structure,
+			//since we need it in the new variable
 			DelElemBeforeTText(objectTText, false, false);
 		}
 	} else {
@@ -241,6 +274,7 @@ void TakeElemBeforeTText(TObjectTText* objectTText) {
 	}
 }
 
+//A function to taking text`s element after work pointer
 void TakeElemAfterTText(TObjectTText* objectTText) {
 	if (objectTText->FirstElem) {
 		if (!objectTText->Worked) {
@@ -248,14 +282,18 @@ void TakeElemAfterTText(TObjectTText* objectTText) {
 		} else if (!objectTText->Worked->Next) {
 			std::cout << "Work pointer on last element, can`t take after" << std::endl;
 		} else {
+			//Clearing memory if there is something in the taken element
 			if (objectTText->CurrentElem) {
                 ClearTWordsList(objectTText->CurrentElem, false, true);
 				free(objectTText->CurrentElem);
 			}
+			//Pass the value to a separate variable
 			objectTText->CurrentElem = objectTText->Worked->Next->objectTWordsList;
 			std::cout << "Taken element:" << std::endl;
             PrintTWordsList(objectTText->CurrentElem, false);
             std::cout << std::endl;
+			//We delete the element without messages about deletion and without deleting the nested structure,
+			//since we need it in the new variable
 			DelElemAfterTText(objectTText, false, false);
 		}
 	} else {
@@ -264,6 +302,7 @@ void TakeElemAfterTText(TObjectTText* objectTText) {
 	}
 }
 
+//A function to changing text`s element before work pointer
 void ChangeElemBeforeTText(TObjectTText* objectTText) {
 	if (objectTText->FirstElem) {
 		if (!objectTText->Worked) {
@@ -271,7 +310,10 @@ void ChangeElemBeforeTText(TObjectTText* objectTText) {
 		} else if (!objectTText->Worked->Prev) {
 			std::cout << "Work pointer on first element, can`t change before" << std::endl;
 		} else {
+			//Go to the list menu
 		    if (!MenuList(objectTText->Worked->Prev->objectTWordsList)) {
+				//If the object is empty after the change, the item is removed from the text and all memory is freed,
+				//without displaying messages
 		        DelElemBeforeTText(objectTText, false);
 		        std::cout << "Nested struct is empty, element has been removed" << std::endl;
 		    }
@@ -282,6 +324,7 @@ void ChangeElemBeforeTText(TObjectTText* objectTText) {
 	}
 }
 
+//A function to changing text`s element after work pointer
 void ChangeElemAfterTText(TObjectTText* objectTText) {
 	if (objectTText->FirstElem) {
 		if (!objectTText->Worked) {
@@ -289,7 +332,10 @@ void ChangeElemAfterTText(TObjectTText* objectTText) {
 		} else if (!objectTText->Worked->Next) {
 			std::cout << "Work pointer on last element, can`t change after" << std::endl;
 		} else {
+			//Go to the list menu
             if (!MenuList(objectTText->Worked->Next->objectTWordsList)) {
+				//If the object is empty after the change, the item is removed from the text and all memory is freed,
+				//without displaying messages
                 DelElemAfterTText(objectTText, false);
                 std::cout << "Nested struct is empty, element has been removed" << std::endl;
             }
@@ -300,7 +346,9 @@ void ChangeElemAfterTText(TObjectTText* objectTText) {
 	}
 }
 
+//A function to add text`s element before work pointer
 void AddElemBeforeTText(TObjectTText* objectTText) {
+	//Creating a text object and list
 	auto newElem = (TObjectTWordsList*)calloc(sizeof(TObjectTWordsList), 1);
 	auto tmpText = (TText*)calloc(sizeof(TText), 1);
 
@@ -315,6 +363,8 @@ void AddElemBeforeTText(TObjectTText* objectTText) {
 	    return;
 	}
 	if (!MenuList(newElem)) {
+		//If the object is empty after the creating, the item is does not add in the text and all memory is freed,
+		//without messages
 	    ClearTWordsList(newElem, false, true);
 	    free(newElem);
 	    free(tmpText);
@@ -322,22 +372,26 @@ void AddElemBeforeTText(TObjectTText* objectTText) {
 	    return;
 	}
 	if (!objectTText->FirstElem) {
+		//Building links if the text is empty
 		objectTText->FirstElem = tmpText;
 		objectTText->FirstElem->objectTWordsList = newElem;
 		objectTText->LastElem = objectTText->FirstElem;
 		objectTText->Worked = objectTText->FirstElem;
 	} else if (!objectTText->Worked) {
 		std::cout << "Work pointer invalid, can`t add before" << std::endl;
+		//If work pointer is nullptr, all memory is freed without messages
 		ClearTWordsList(newElem, false, true);
 		free(newElem);
 		free(tmpText);
 		return;
 	} else if (!objectTText->Worked->Prev) {
+		//Building links if the is not empty and work pointer has not previous element
 		objectTText->Worked->Prev = tmpText;
 		objectTText->FirstElem = objectTText->Worked->Prev;
 		objectTText->FirstElem->Next = objectTText->Worked;
 		objectTText->FirstElem->objectTWordsList = newElem;
 	} else {
+		//Building links if the is not empty and work pointer has previous element
 		tmpText->objectTWordsList = newElem;
 		tmpText->Next = objectTText->Worked;
 		tmpText->Prev = objectTText->Worked->Prev;
@@ -347,7 +401,9 @@ void AddElemBeforeTText(TObjectTText* objectTText) {
     std::cout << "Element has been added" << std::endl;
 }
 
+//A function to add text`s element after work pointer
 void AddElemAfterTText(TObjectTText* objectTText) {
+	//Creating a text object and list
 	auto newElem = (TObjectTWordsList*)calloc(sizeof(TObjectTWordsList), 1);
 	auto tmpText = (TText*)calloc(sizeof(TText), 1);
 
@@ -362,6 +418,8 @@ void AddElemAfterTText(TObjectTText* objectTText) {
         return;
     }
     if (!MenuList(newElem)) {
+		//If the object is empty after the creating, the item is does not add in the text and all memory is freed,
+		//without messages
         ClearTWordsList(newElem, false, true);
         free(newElem);
         free(tmpText);
@@ -369,22 +427,26 @@ void AddElemAfterTText(TObjectTText* objectTText) {
         return;
     }
 	if (!objectTText->FirstElem) {
+		//Building links if the text is empty
 		objectTText->FirstElem = tmpText;
 		objectTText->FirstElem->objectTWordsList = newElem;
 		objectTText->LastElem = objectTText->FirstElem;
 		objectTText->Worked = objectTText->FirstElem;
 	} else if (!objectTText->Worked) {
 		std::cout << "Work pointer invalid, can`t add after" << std::endl;
+		//If work pointer is nullptr, all memory is freed without messages
 		ClearTWordsList(newElem, false, true);
 		free(newElem);
 		free(tmpText);
 		return;
 	} else if (!objectTText->Worked->Next) {
+		//Building links if the is not empty and work pointer has not next element
 	    objectTText->Worked->Next = tmpText;
 	    objectTText->LastElem = objectTText->Worked->Next;
 	    objectTText->LastElem->Prev = objectTText->Worked;
 	    objectTText->LastElem->objectTWordsList = newElem;
 	} else {
+		//Building links if the is not empty and work pointer has next element
 		tmpText->objectTWordsList = newElem;
 		tmpText->Next = objectTText->Worked->Next;
 		tmpText->Prev = objectTText->Worked;
@@ -394,15 +456,19 @@ void AddElemAfterTText(TObjectTText* objectTText) {
     std::cout << "Element has been added" << std::endl;
 }
 
+//A function to printing text`s elements
 void PrintText(TObjectTText* objectTText) {
 	if (objectTText->FirstElem) {
 		for (auto tmp = objectTText->FirstElem; tmp != nullptr; tmp = tmp->Next) {
+			//Align the output and output of the working pointer
 			std::cout << (tmp == objectTText->Worked ? "-->" : "   ");
 			PrintTWordsList(tmp->objectTWordsList, true);
 			std::cout << std::endl;
 		}
+		//Output in reverse order
 		std::cout << "revers print:" << std::endl;
         for (auto tmp = objectTText->LastElem; tmp != nullptr; tmp = tmp->Prev) {
+        	//Align the output and output of the working pointer
             std::cout << (tmp == objectTText->Worked ? "-->" : "   ");
             PrintTWordsList(tmp->objectTWordsList, true);
             std::cout << std::endl;
@@ -413,6 +479,7 @@ void PrintText(TObjectTText* objectTText) {
 	}
 }
 
+//A function to finish working
 void EndWorkTText(TObjectTText* objectTText) {
 	objectTText->Available = false;
 	std::cout << "Work with text is forbidden" << std::endl;
@@ -420,6 +487,7 @@ void EndWorkTText(TObjectTText* objectTText) {
 
 //---------------------------------------------//
 int ChooseTTextOperation() {
+	//The divider output
     std::cout << "////////////////////////////////////////////////////////////////////////" << std::endl;
 	std::cout << "Text menu" << std::endl;
 	std::cout << "1.Begin work with text" << std::endl;
@@ -455,9 +523,12 @@ bool MenuText(TObjectTText* objectTText) {
 	int operation;
 
 	while (loop) {
+		//Calling a text function that selects an operation
 		operation = ChooseTTextOperation();
+		//The divider output
         std::cout << "////////////////////////////////////////////////////////////////////////" << std::endl;
-		if (objectTText->Available) {
+		//Select an action relative to the operation number
+        if (objectTText->Available) {
 			switch (operation) {
 				case 1: BeginWorkTText(objectTText); break;
 				case 2: ClearTText(objectTText, true, true, false); break;
@@ -484,6 +555,7 @@ bool MenuText(TObjectTText* objectTText) {
 				case 23: exit(0);
 				default: std::cout << "Choose right operation" << std::endl;
 			}
+			//Print text after operations
 			if (operation != 20 && operation != 22) {
 				if (objectTText->FirstElem) {
 					PrintText(objectTText);
@@ -501,7 +573,9 @@ bool MenuText(TObjectTText* objectTText) {
 			std::cout << "Choose right operation" << std::endl;
 		};
 	}
+	//The divider output
     std::cout << "////////////////////////////////////////////////////////////////////////" << std::endl;
+	//Determines whether the text is empty after working with it
 	return objectTText->FirstElem;
 }
 //---------------------------------------------//
