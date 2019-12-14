@@ -20,7 +20,7 @@ void ClearObjectTStack(TObjectTStack& objectTStack);
 //---------------------------------------------//
 
 void BeginWorkTStack(TObjectTStack& objectTStack);
-void ClearTStack(TObjectTStack &objectTStack, bool showMsg, size_t &size);
+void CleanTStack(TObjectTStack &objectTStack, bool showMsg, size_t &size);
 void StackIsEmpty(TObjectTStack& objectTStack);
 void ShowTStackElem(TObjectTStack& objectTStack);
 void DelTStackElem(TObjectTStack &objectTStack, bool showMsg, bool delNested, size_t &size);
